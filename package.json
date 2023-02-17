@@ -1,0 +1,21 @@
+{
+  "name": "tree-sitter-aiken",
+  "version": "1.0.0",
+  "description": "",
+  "main": "bindings/node",
+  "scripts": {
+    "generate": "tree-sitter generate",
+    "parse": "tree-sitter parse",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "rvcas",
+  "license": "ISC",
+  "dependencies": {
+    "nan": "^2.17.0"
+  },
+  "devDependencies": {
+    "prettier": "^2.8.4",
+    "tree-sitter-cli": "^0.20.7"
+  }
+}
