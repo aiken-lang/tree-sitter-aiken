@@ -1,0 +1,65 @@
+================================================================================
+Imports
+================================================================================
+
+use foo
+use foo/bar
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (import
+    (module))
+  (import
+    (module)))
+
+================================================================================
+Unqualified Imports
+================================================================================
+
+use foo/bar.{buzz}
+use foo/bar.{buzz, Fizz}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (import
+    (module)
+    (unqualified_imports
+      (unqualified_import
+        (identifier))))
+  (import
+    (module)
+    (unqualified_imports
+      (unqualified_import
+        (identifier))
+      (unqualified_import
+        (type_identifier)))))
+
+================================================================================
+Aliased Imports
+================================================================================
+
+use foo/bar as foo
+use foo/bar.{buzz as fizz}
+use foo/bar.{Buzz as Fizz} as bar
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (import
+    (module)
+    (identifier))
+  (import
+    (module)
+    (unqualified_imports
+      (unqualified_import
+        (identifier)
+        (identifier))))
+  (import
+    (module)
+    (unqualified_imports
+      (unqualified_import
+        (type_identifier)
+        (type_identifier)))
+    (identifier)))

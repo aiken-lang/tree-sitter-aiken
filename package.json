@@ -6,7 +6,7 @@
   "scripts": {
     "generate": "tree-sitter generate",
     "parse": "tree-sitter parse",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "tree-sitter test"
   },
   "keywords": [],
   "author": "rvcas",
@@ -17,5 +17,14 @@
   "devDependencies": {
     "prettier": "^2.8.4",
     "tree-sitter-cli": "^0.20.7"
-  }
+  },
+  "tree-sitter": [
+    {
+      "scope": "source.aiken",
+      "file-types": [
+        "ak"
+      ],
+      "injection-regex": "^ak$"
+    }
+  ]
 }
