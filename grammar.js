@@ -34,20 +34,8 @@ module.exports = grammar({
     
 
     _declaration_statement: $ => choice(
-      //$.const_item,
-      //$.macro_invocation,
-      //$.macro_definition,
-      //$.empty_statement,
-      //$.attribute_item,
-      //$.inner_attribute_item,
-      //$.mod_item,
-      //$.foreign_mod_item,
-      //$.struct_item,
-      //$.union_item,
-      //$.enum_item,
       $.import,
       $.type_declaration,
-      //$.function_item,
     ),
 
     declaration_list: $ => seq(
@@ -57,22 +45,7 @@ module.exports = grammar({
     ),
 
     _type: $ => choice(
-      //$.abstract_type,
-      //$.reference_type,
-      //$.metavariable,
-      //$.pointer_type,
-      //$.generic_type,
-      //$.scoped_type_identifier,
-      //$.tuple_type,
-      //$.unit_type,
-      //$.array_type,
-      //$.function_type,
       $.type_identifier,
-      //$.macro_invocation,
-      //$.empty_type,
-      //$.dynamic_type,
-      //$.bounded_type,
-      //alias(choice(...primitive_types), $.primitive_type)
     ),
 
     qualified_type: $ => seq(
@@ -144,7 +117,7 @@ function repeat_separated_by(
   return seq(rule, repeat(seq(separator, rule)), optional(separator));
 }
 
-
+// Taken from tree-sitter-rust
 function sepBy1(sep, rule) {
   return seq(rule, repeat(seq(sep, rule)))
 }
