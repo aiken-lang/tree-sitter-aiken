@@ -1,0 +1,38 @@
+===========================
+types with type arguments
+===========================
+
+type Datum {
+  owner: Hash<Blake2b_224, VerificationKey>,
+}
+ 
+
+--------
+(source_file 
+  (type_declaration 
+    (type_identifier)
+      (field_declaration_list
+        (field_declaration
+        (identifier)
+        (type_identifier)
+        (type_arguments 
+          (type_identifier)
+          (type_identifier))))))
+
+===========================
+types with no type arguments
+===========================
+
+type Redeemer {
+  msg: ByteArray,
+}
+ 
+
+--------
+(source_file 
+  (type_declaration 
+    (type_identifier)
+      (field_declaration_list
+        (field_declaration
+        (identifier)
+          (type_identifier)))))

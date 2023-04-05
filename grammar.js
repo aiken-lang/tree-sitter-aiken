@@ -4,7 +4,7 @@ module.exports = grammar({
   name: "aiken",
   rules: {
     source_file: ($) => repeat($._definition),
-    _definition: ($) => choice($.import),
+    _definition: ($) => choice($._declaration_statement),
 
     // use foo
     // use foo/bar
@@ -31,6 +31,88 @@ module.exports = grammar({
         )
       ),
 
+    
+
+    _declaration_statement: $ => choice(
+      //$.const_item,
+      //$.macro_invocation,
+      //$.macro_definition,
+      //$.empty_statement,
+      //$.attribute_item,
+      //$.inner_attribute_item,
+      //$.mod_item,
+      //$.foreign_mod_item,
+      //$.struct_item,
+      //$.union_item,
+      //$.enum_item,
+      $.import,
+      $.type_declaration,
+      //$.function_item,
+    ),
+
+    declaration_list: $ => seq(
+      '{',
+        repeat($._declaration_statement),
+      '}'
+    ),
+
+    _type: $ => choice(
+      //$.abstract_type,
+      //$.reference_type,
+      //$.metavariable,
+      //$.pointer_type,
+      //$.generic_type,
+      //$.scoped_type_identifier,
+      //$.tuple_type,
+      //$.unit_type,
+      //$.array_type,
+      //$.function_type,
+      $.type_identifier,
+      //$.macro_invocation,
+      //$.empty_type,
+      //$.dynamic_type,
+      //$.bounded_type,
+      //alias(choice(...primitive_types), $.primitive_type)
+    ),
+
+    qualified_type: $ => seq(
+      field('type', $._type),
+      'as',
+      field('alias', $._type)
+    ),
+
+    field_declaration_list: $ => seq(
+      '{',
+      sepBy(',', $.field_declaration),
+      optional(','),
+      '}'
+    ),
+
+
+    type_arguments: $ => seq(
+      token(prec(1, '<')),
+      sepBy1(',', choice(
+        $._type,
+      )),
+      optional(','),
+      '>'
+    ),
+
+
+    field_declaration: $ => seq(
+      field('name', $.identifier),
+      ':',
+      $._type,
+      field('type_arguments', optional($.type_arguments)),
+    ),
+
+
+    type_declaration: $ => seq(
+      'type',
+      field('name', $.type_identifier),
+      field('body', $.field_declaration_list)
+    ),
+
     //  Comments
     module_comment: ($) => token(seq("////", /.*/)),
     statement_comment: ($) => token(seq("///", /.*/)),
@@ -44,7 +126,7 @@ module.exports = grammar({
 
     _discard_name: ($) => /_[_0-9a-z]*/,
     _name: ($) => /[_a-z][_0-9a-z]*/,
-    _upname: ($) => /[A-Z][0-9a-zA-Z]*/,
+    _upname: ($) => /[A-Za-z][A-Za-z0-9_]*/,
   },
 });
 
@@ -60,4 +142,13 @@ function repeat_separated_by(
   separator
 ) {
   return seq(rule, repeat(seq(separator, rule)), optional(separator));
+}
+
+
+function sepBy1(sep, rule) {
+  return seq(rule, repeat(seq(sep, rule)))
+}
+
+function sepBy(sep, rule) {
+  return optional(sepBy1(sep, rule))
 }
