@@ -16,7 +16,7 @@
           },
           {
             "type": "SYMBOL",
-            "name": "statement_comment"
+            "name": "definition_comment"
           },
           {
             "type": "SYMBOL",
@@ -281,7 +281,7 @@
         ]
       }
     },
-    "statement_comment": {
+    "definition_comment": {
       "type": "TOKEN",
       "content": {
         "type": "SEQ",
