@@ -54,7 +54,19 @@
       "required": false,
       "types": [
         {
+          "type": "comment",
+          "named": true
+        },
+        {
           "type": "import",
+          "named": true
+        },
+        {
+          "type": "module_comment",
+          "named": true
+        },
+        {
+          "type": "statement_comment",
           "named": true
         }
       ]
@@ -129,6 +141,18 @@
   {
     "type": "as",
     "named": false
+  },
+  {
+    "type": "comment",
+    "named": true
+  },
+  {
+    "type": "module_comment",
+    "named": true
+  },
+  {
+    "type": "statement_comment",
+    "named": true
   },
   {
     "type": "use",
