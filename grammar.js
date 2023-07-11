@@ -6,7 +6,7 @@ module.exports = grammar({
     source_file: ($) => repeat(choice(
       $._definition,
       $.module_comment,
-      $.statement_comment,
+      $.definition_comment,
       $.comment,
     )),
     _definition: ($) => choice($.import),
@@ -38,7 +38,7 @@ module.exports = grammar({
 
     //  Comments
     module_comment: ($) => token(seq("////", /.*/)),
-    statement_comment: ($) => token(seq("///", /.*/)),
+    definition_comment: ($) => token(seq("///", /.*/)),
     comment: ($) => token(seq("//", /.*/)),
 
     // convenient

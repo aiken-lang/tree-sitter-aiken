@@ -26,12 +26,12 @@ Multi-line comment
 Statement comment
 ================================================================================
 
-/// This is a statement comment
+/// This is a definition comment
 
 --------------------------------------------------------------------------------
 
 (source_file
-  (statement_comment))
+  (definition_comment))
 
 ================================================================================
 Module comment
@@ -50,14 +50,14 @@ Mixed comments
 
 // This is a comment
 //// This is a module comment
-/// This is a statement comment
+/// This is a definition comment
 
 --------------------------------------------------------------------------------
 
 (source_file
   (comment)
   (module_comment)
-  (statement_comment))
+  (definition_comment))
 
 ================================================================================
 Comments at the end of line
@@ -73,6 +73,6 @@ use foo //// this is a module comment though
   (import (module))
   (comment)
   (import (module))
-  (statement_comment)
+  (definition_comment)
   (import (module))
   (module_comment))
