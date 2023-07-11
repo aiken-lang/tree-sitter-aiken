@@ -3,7 +3,12 @@
 module.exports = grammar({
   name: "aiken",
   rules: {
-    source_file: ($) => repeat($._definition),
+    source_file: ($) => repeat(choice(
+      $._definition,
+      $.module_comment,
+      $.statement_comment,
+      $.comment,
+    )),
     _definition: ($) => choice($.import),
 
     // use foo
