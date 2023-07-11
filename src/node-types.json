@@ -58,15 +58,15 @@
           "named": true
         },
         {
+          "type": "definition_comment",
+          "named": true
+        },
+        {
           "type": "import",
           "named": true
         },
         {
           "type": "module_comment",
-          "named": true
-        },
-        {
-          "type": "statement_comment",
           "named": true
         }
       ]
@@ -147,11 +147,11 @@
     "named": true
   },
   {
-    "type": "module_comment",
+    "type": "definition_comment",
     "named": true
   },
   {
-    "type": "statement_comment",
+    "type": "module_comment",
     "named": true
   },
   {

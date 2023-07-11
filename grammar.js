@@ -37,9 +37,9 @@ module.exports = grammar({
       ),
 
     //  Comments
-    module_comment: ($) => token(seq("////", /.*/)),
-    definition_comment: ($) => token(seq("///", /.*/)),
-    comment: ($) => token(seq("//", /.*/)),
+    module_comment: (_$) => token(seq("////", /.*/)),
+    definition_comment: (_$) => token(seq("///", /.*/)),
+    comment: (_$) => token(seq("//", /.*/)),
 
     // convenient
     identifier: ($) => $._name,
@@ -47,9 +47,9 @@ module.exports = grammar({
     discard: ($) => $._discard_name,
     type_identifier: ($) => $._upname,
 
-    _discard_name: ($) => /_[_0-9a-z]*/,
-    _name: ($) => /[_a-z][_0-9a-z]*/,
-    _upname: ($) => /[A-Z][0-9a-zA-Z]*/,
+    _discard_name: (_$) => /_[_0-9a-z]*/,
+    _name: (_$) => /[_a-z][_0-9a-z]*/,
+    _upname: (_$) => /[A-Z][0-9a-zA-Z]*/,
   },
 });
 
