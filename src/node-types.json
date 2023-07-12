@@ -74,6 +74,10 @@
           "named": true
         },
         {
+          "type": "type_enum",
+          "named": true
+        },
+        {
           "type": "type_struct",
           "named": true
         }
@@ -135,12 +139,7 @@
     }
   },
   {
-    "type": "type_identifier",
-    "named": true,
-    "fields": {}
-  },
-  {
-    "type": "type_struct",
+    "type": "type_enum",
     "named": true,
     "fields": {},
     "children": {
@@ -152,7 +151,50 @@
           "named": true
         },
         {
-          "type": "type_struct_fields",
+          "type": "type_enum_variant",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "type_enum_variant",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "type_argument",
+          "named": true
+        },
+        {
+          "type": "type_identifier",
+          "named": true
+        },
+        {
+          "type": "type_struct_inner",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "type_identifier",
+    "named": true,
+    "fields": {}
+  },
+  {
+    "type": "type_struct",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": false,
+      "required": true,
+      "types": [
+        {
+          "type": "type_struct_inner",
           "named": true
         }
       ]
@@ -187,6 +229,25 @@
       "types": [
         {
           "type": "type_struct_field",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "type_struct_inner",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "type_definition",
+          "named": true
+        },
+        {
+          "type": "type_struct_fields",
           "named": true
         }
       ]
@@ -240,6 +301,14 @@
         }
       ]
     }
+  },
+  {
+    "type": "(",
+    "named": false
+  },
+  {
+    "type": ")",
+    "named": false
   },
   {
     "type": ",",

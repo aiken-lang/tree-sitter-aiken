@@ -25,6 +25,15 @@
         ]
       }
     },
+    "extras": {
+      "type": "CHOICE",
+      "members": [
+        {
+          "type": "SYMBOL",
+          "name": "type_struct_inner"
+        }
+      ]
+    },
     "_definition": {
       "type": "CHOICE",
       "members": [
@@ -39,6 +48,10 @@
         {
           "type": "SYMBOL",
           "name": "type_struct"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "type_enum"
         }
       ]
     },
@@ -294,6 +307,111 @@
         }
       ]
     },
+    "type_enum": {
+      "type": "SEQ",
+      "members": [
+        {
+          "type": "STRING",
+          "value": "type"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "type_definition"
+        },
+        {
+          "type": "SEQ",
+          "members": [
+            {
+              "type": "STRING",
+              "value": "{"
+            },
+            {
+              "type": "REPEAT1",
+              "content": {
+                "type": "SYMBOL",
+                "name": "type_enum_variant"
+              }
+            },
+            {
+              "type": "STRING",
+              "value": "}"
+            }
+          ]
+        }
+      ]
+    },
+    "type_enum_variant": {
+      "type": "CHOICE",
+      "members": [
+        {
+          "type": "SYMBOL",
+          "name": "type_identifier"
+        },
+        {
+          "type": "SEQ",
+          "members": [
+            {
+              "type": "SYMBOL",
+              "name": "type_identifier"
+            },
+            {
+              "type": "SEQ",
+              "members": [
+                {
+                  "type": "STRING",
+                  "value": "("
+                },
+                {
+                  "type": "SEQ",
+                  "members": [
+                    {
+                      "type": "SYMBOL",
+                      "name": "type_argument"
+                    },
+                    {
+                      "type": "REPEAT",
+                      "content": {
+                        "type": "SEQ",
+                        "members": [
+                          {
+                            "type": "STRING",
+                            "value": ","
+                          },
+                          {
+                            "type": "SYMBOL",
+                            "name": "type_argument"
+                          }
+                        ]
+                      }
+                    },
+                    {
+                      "type": "CHOICE",
+                      "members": [
+                        {
+                          "type": "STRING",
+                          "value": ","
+                        },
+                        {
+                          "type": "BLANK"
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "STRING",
+                  "value": ")"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "SYMBOL",
+          "name": "type_struct_inner"
+        }
+      ]
+    },
     "type_struct": {
       "type": "SEQ",
       "members": [
@@ -301,6 +419,15 @@
           "type": "STRING",
           "value": "type"
         },
+        {
+          "type": "SYMBOL",
+          "name": "type_struct_inner"
+        }
+      ]
+    },
+    "type_struct_inner": {
+      "type": "SEQ",
+      "members": [
         {
           "type": "SYMBOL",
           "name": "type_definition"
