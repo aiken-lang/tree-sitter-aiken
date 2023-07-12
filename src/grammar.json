@@ -24,7 +24,7 @@
           },
           {
             "type": "SYMBOL",
-            "name": "alias"
+            "name": "type_alias"
           }
         ]
       }
@@ -269,12 +269,12 @@
         }
       ]
     },
-    "alias": {
+    "type_alias": {
       "type": "SEQ",
       "members": [
         {
           "type": "STRING",
-          "value": "alias"
+          "value": "type"
         },
         {
           "type": "SYMBOL",

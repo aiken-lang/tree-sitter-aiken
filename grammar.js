@@ -8,7 +8,7 @@ module.exports = grammar({
       $.module_comment,
       $.definition_comment,
       $.comment,
-      $.alias
+      $.type_alias
     )),
     _definition: ($) => choice($.import),
 
@@ -37,8 +37,8 @@ module.exports = grammar({
         )
       ),
 
-    alias: ($) =>
-      seq("alias", $.type_definition, "=", $.type_definition),
+    type_alias: ($) =>
+      seq("type", $.type_definition, "=", $.type_definition),
 
     type_definition: ($) =>
       seq($.type_identifier, optional(seq("<", repeat_separated_by($.type_argument, ","), ">"))),
