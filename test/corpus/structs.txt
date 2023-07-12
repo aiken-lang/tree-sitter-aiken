@@ -10,14 +10,15 @@ type Foo {
 
 (source_file
   (type_struct
-    (type_definition
-      (type_identifier))
-    (type_struct_fields
-      (type_struct_field
-        (identifier)
-        (type_argument
-          (type_definition
-            (type_identifier)))))))
+    (type_struct_inner
+      (type_definition
+        (type_identifier))
+      (type_struct_fields
+        (type_struct_field
+          (identifier)
+          (type_argument
+            (type_definition
+              (type_identifier))))))))
 
 ================================================================================
 Simple struct with multiple fields
@@ -32,19 +33,20 @@ type Foo {
 
 (source_file
   (type_struct
-    (type_definition
-      (type_identifier))
-    (type_struct_fields
-      (type_struct_field
-        (identifier)
-        (type_argument
-          (type_definition
-            (type_identifier))))
-      (type_struct_field
-        (identifier)
-        (type_argument
-          (type_definition
-            (type_identifier)))))))
+    (type_struct_inner
+      (type_definition
+        (type_identifier))
+      (type_struct_fields
+        (type_struct_field
+          (identifier)
+          (type_argument
+            (type_definition
+              (type_identifier))))
+        (type_struct_field
+          (identifier)
+          (type_argument
+            (type_definition
+              (type_identifier))))))))
 
 ================================================================================
 Struct with generic field
@@ -59,20 +61,21 @@ type Foo<a> {
 
 (source_file
   (type_struct
-    (type_definition
-      (type_identifier)
-      (type_argument
-        (identifier)))
-    (type_struct_fields
-      (type_struct_field
-        (identifier)
+    (type_struct_inner
+      (type_definition
+        (type_identifier)
         (type_argument
           (identifier)))
-      (type_struct_field
-        (identifier)
-        (type_argument
-          (type_definition
-            (type_identifier)))))))
+      (type_struct_fields
+        (type_struct_field
+          (identifier)
+          (type_argument
+            (identifier)))
+        (type_struct_field
+          (identifier)
+          (type_argument
+            (type_definition
+              (type_identifier))))))))
 
 ================================================================================
 Struct with multiple generic fields
@@ -87,18 +90,19 @@ type Foo<a, b> {
 
 (source_file
   (type_struct
-    (type_definition
-      (type_identifier)
-      (type_argument
-        (identifier))
-      (type_argument
-        (identifier)))
-    (type_struct_fields
-      (type_struct_field
-        (identifier)
+    (type_struct_inner
+      (type_definition
+        (type_identifier)
+        (type_argument
+          (identifier))
         (type_argument
           (identifier)))
-      (type_struct_field
-        (identifier)
-        (type_argument
-          (identifier))))))
+      (type_struct_fields
+        (type_struct_field
+          (identifier)
+          (type_argument
+            (identifier)))
+        (type_struct_field
+          (identifier)
+          (type_argument
+            (identifier)))))))

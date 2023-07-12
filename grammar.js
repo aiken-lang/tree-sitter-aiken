@@ -9,12 +9,17 @@ module.exports = grammar({
       $.definition_comment,
       $.comment,
     )),
+    extras: ($) => choice(
+      $.type_struct_inner
+    ),
     _definition: ($) => choice(
       $.import,
       $.type_alias,
-      $.type_struct
+      $.type_struct,
+      $.type_enum
     ),
 
+    // Handles import definitions
     // use foo
     // use foo/bar
     // use foo/bar.{buzz, Fizz as Fuzz} as foo
@@ -40,11 +45,28 @@ module.exports = grammar({
         )
       ),
 
+    // Handles type aliasing definitions
     type_alias: ($) =>
       seq("type", $.type_definition, "=", $.type_definition),
 
+    // Handle enum type definitions
+    type_enum: ($) => seq("type", $.type_definition, block(repeat1(
+      $.type_enum_variant,
+    ))),
+    type_enum_variant: ($) => choice(
+      // Foo
+      $.type_identifier,
+      // Foo(Foo)
+      // Foo(a, b)
+      seq($.type_identifier, seq("(", repeat_separated_by($.type_argument, ","), ")")),
+      // Foo { bar: Baz }
+      $.type_struct_inner
+    ),
+
+    // Handle struct type definitions (syntax sugar for enumerations with only one element)
     type_struct: ($) =>
-      seq("type", $.type_definition, block($.type_struct_fields)),
+      seq("type", $.type_struct_inner),
+    type_struct_inner: ($) => seq($.type_definition, block($.type_struct_fields)),
     type_struct_fields: ($) => repeat1($.type_struct_field),
     type_struct_field: ($) => seq($.identifier, ":", $.type_argument),
 

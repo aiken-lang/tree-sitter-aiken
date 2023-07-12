@@ -1,0 +1,150 @@
+================================================================================
+Enum with single unit variant
+================================================================================
+
+type Foo {
+  Bar
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (type_enum
+    (type_definition
+      (type_identifier))
+    (type_enum_variant
+      (type_identifier))))
+
+================================================================================
+Enum with multiple unit variant
+================================================================================
+
+type Foo {
+  Bar
+  Baz
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (type_enum
+    (type_definition
+      (type_identifier))
+    (type_enum_variant
+      (type_identifier))
+    (type_enum_variant
+      (type_identifier))))
+
+================================================================================
+Enum with unnamed variants arguments
+================================================================================
+
+type Foo {
+  Bar(Baz)
+  Qux(Quux)
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (type_enum
+    (type_definition
+      (type_identifier))
+    (type_enum_variant
+      (type_identifier)
+      (type_argument
+        (type_definition
+          (type_identifier))))
+    (type_enum_variant
+      (type_identifier)
+      (type_argument
+        (type_definition
+          (type_identifier))))))
+
+================================================================================
+Enum with struct variant
+================================================================================
+
+type Foo {
+  Bar { higa: Int }
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (type_enum
+    (type_definition
+      (type_identifier))
+    (type_enum_variant
+      (type_struct_inner
+        (type_definition
+          (type_identifier))
+        (type_struct_fields
+          (type_struct_field
+            (identifier)
+            (type_argument
+              (type_definition
+                (type_identifier)))))))))
+
+================================================================================
+Enum with mixed variants
+================================================================================
+
+type Foo {
+  Bar {
+    baz: Int
+    qux: Qux
+  }
+  Qux
+  Quux(Int)
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (type_enum
+    (type_definition
+      (type_identifier))
+    (type_enum_variant
+      (type_struct_inner
+        (type_definition
+          (type_identifier))
+        (type_struct_fields
+          (type_struct_field
+            (identifier)
+            (type_argument
+              (type_definition
+                (type_identifier))))
+          (type_struct_field
+            (identifier)
+            (type_argument
+              (type_definition
+                (type_identifier)))))))
+    (type_enum_variant
+      (type_identifier))
+    (type_enum_variant
+      (type_identifier)
+      (type_argument
+        (type_definition
+          (type_identifier))))))
+
+================================================================================
+Enum with generic type arguments
+================================================================================
+
+type Foo<a> {
+  Bar(a)
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (type_enum
+    (type_definition
+      (type_identifier)
+      (type_argument
+        (identifier)))
+    (type_enum_variant
+      (type_identifier)
+      (type_argument
+        (identifier)))))
