@@ -1,0 +1,103 @@
+================================================================================
+Type alias
+================================================================================
+
+alias Foo = HelloWorld
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (alias (type_definition (type_identifier))
+   (type_definition (type_identifier))))
+
+================================================================================
+Type alias with generics
+================================================================================
+
+alias Foo<a> = HelloWorld<a>
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (alias
+    (type_definition
+      (type_identifier)
+      (type_argument
+        (identifier)))
+    (type_definition
+      (type_identifier)
+      (type_argument
+        (identifier)))))
+
+================================================================================
+Type alias with type dependencies
+================================================================================
+
+alias Foo<Int> = HelloWorld<Int>
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (alias
+    (type_definition
+      (type_identifier)
+      (type_argument
+        (type_definition
+          (type_identifier))))
+    (type_definition
+      (type_identifier)
+      (type_argument
+        (type_definition
+          (type_identifier))))))
+
+================================================================================
+Type alias with multiple type dependencies
+================================================================================
+
+alias Foo<Int, String> = HelloWorld<Int, String>
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (alias
+    (type_definition
+      (type_identifier)
+      (type_argument
+        (type_definition
+          (type_identifier)))
+      (type_argument
+        (type_definition
+          (type_identifier))))
+    (type_definition
+      (type_identifier)
+      (type_argument
+        (type_definition
+          (type_identifier)))
+      (type_argument
+        (type_definition
+          (type_identifier))))))
+
+================================================================================
+Type alias with mixed type dependencies
+================================================================================
+
+alias Foo<Int, a> = HelloWorld<Int, a>
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (alias
+    (type_definition
+      (type_identifier)
+      (type_argument
+        (type_definition
+          (type_identifier)))
+      (type_argument
+        (identifier)))
+    (type_definition
+      (type_identifier)
+      (type_argument
+        (type_definition
+          (type_identifier)))
+      (type_argument
+        (identifier)))))
