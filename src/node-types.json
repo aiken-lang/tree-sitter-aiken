@@ -72,6 +72,10 @@
         {
           "type": "type_alias",
           "named": true
+        },
+        {
+          "type": "type_struct",
+          "named": true
         }
       ]
     }
@@ -136,6 +140,59 @@
     "fields": {}
   },
   {
+    "type": "type_struct",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "type_definition",
+          "named": true
+        },
+        {
+          "type": "type_struct_fields",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "type_struct_field",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "identifier",
+          "named": true
+        },
+        {
+          "type": "type_argument",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "type_struct_fields",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "type_struct_field",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
     "type": "unqualified_import",
     "named": true,
     "fields": {
@@ -194,6 +251,10 @@
   },
   {
     "type": "/",
+    "named": false
+  },
+  {
+    "type": ":",
     "named": false
   },
   {

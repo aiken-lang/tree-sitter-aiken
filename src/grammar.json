@@ -21,10 +21,6 @@
           {
             "type": "SYMBOL",
             "name": "comment"
-          },
-          {
-            "type": "SYMBOL",
-            "name": "type_alias"
           }
         ]
       }
@@ -35,6 +31,14 @@
         {
           "type": "SYMBOL",
           "name": "import"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "type_alias"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "type_struct"
         }
       ]
     },
@@ -287,6 +291,60 @@
         {
           "type": "SYMBOL",
           "name": "type_definition"
+        }
+      ]
+    },
+    "type_struct": {
+      "type": "SEQ",
+      "members": [
+        {
+          "type": "STRING",
+          "value": "type"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "type_definition"
+        },
+        {
+          "type": "SEQ",
+          "members": [
+            {
+              "type": "STRING",
+              "value": "{"
+            },
+            {
+              "type": "SYMBOL",
+              "name": "type_struct_fields"
+            },
+            {
+              "type": "STRING",
+              "value": "}"
+            }
+          ]
+        }
+      ]
+    },
+    "type_struct_fields": {
+      "type": "REPEAT1",
+      "content": {
+        "type": "SYMBOL",
+        "name": "type_struct_field"
+      }
+    },
+    "type_struct_field": {
+      "type": "SEQ",
+      "members": [
+        {
+          "type": "SYMBOL",
+          "name": "identifier"
+        },
+        {
+          "type": "STRING",
+          "value": ":"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "type_argument"
         }
       ]
     },

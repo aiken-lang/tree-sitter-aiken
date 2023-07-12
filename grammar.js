@@ -8,9 +8,12 @@ module.exports = grammar({
       $.module_comment,
       $.definition_comment,
       $.comment,
-      $.type_alias
     )),
-    _definition: ($) => choice($.import),
+    _definition: ($) => choice(
+      $.import,
+      $.type_alias,
+      $.type_struct
+    ),
 
     // use foo
     // use foo/bar
@@ -39,6 +42,11 @@ module.exports = grammar({
 
     type_alias: ($) =>
       seq("type", $.type_definition, "=", $.type_definition),
+
+    type_struct: ($) =>
+      seq("type", $.type_definition, block($.type_struct_fields)),
+    type_struct_fields: ($) => repeat1($.type_struct_field),
+    type_struct_field: ($) => seq($.identifier, ":", $.type_argument),
 
     type_definition: ($) =>
       seq($.type_identifier, optional(seq("<", repeat_separated_by($.type_argument, ","), ">"))),
@@ -73,4 +81,8 @@ function repeat_separated_by(
   separator
 ) {
   return seq(rule, repeat(seq(separator, rule)), optional(separator));
+}
+
+function block(rule, start_sep = "{", end_sep = "}") {
+  return seq(start_sep, rule, end_sep)
 }
