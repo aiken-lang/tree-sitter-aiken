@@ -1,20 +1,5 @@
 [
   {
-    "type": "alias",
-    "named": true,
-    "fields": {},
-    "children": {
-      "multiple": true,
-      "required": true,
-      "types": [
-        {
-          "type": "type_definition",
-          "named": true
-        }
-      ]
-    }
-  },
-  {
     "type": "identifier",
     "named": true,
     "fields": {}
@@ -69,10 +54,6 @@
       "required": false,
       "types": [
         {
-          "type": "alias",
-          "named": true
-        },
-        {
           "type": "comment",
           "named": true
         },
@@ -86,6 +67,25 @@
         },
         {
           "type": "module_comment",
+          "named": true
+        },
+        {
+          "type": "type_alias",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "type_alias",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "type_definition",
           "named": true
         }
       ]
@@ -209,10 +209,6 @@
     "named": false
   },
   {
-    "type": "alias",
-    "named": false
-  },
-  {
     "type": "as",
     "named": false
   },
@@ -227,6 +223,10 @@
   {
     "type": "module_comment",
     "named": true
+  },
+  {
+    "type": "type",
+    "named": false
   },
   {
     "type": "use",
