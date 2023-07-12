@@ -1,0 +1,104 @@
+================================================================================
+Simple struct type definition
+================================================================================
+
+type Foo {
+  bar: Int
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (type_struct
+    (type_definition
+      (type_identifier))
+    (type_struct_fields
+      (type_struct_field
+        (identifier)
+        (type_argument
+          (type_definition
+            (type_identifier)))))))
+
+================================================================================
+Simple struct with multiple fields
+================================================================================
+
+type Foo {
+  bar: Int
+  baz: Int
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (type_struct
+    (type_definition
+      (type_identifier))
+    (type_struct_fields
+      (type_struct_field
+        (identifier)
+        (type_argument
+          (type_definition
+            (type_identifier))))
+      (type_struct_field
+        (identifier)
+        (type_argument
+          (type_definition
+            (type_identifier)))))))
+
+================================================================================
+Struct with generic field
+================================================================================
+
+type Foo<a> {
+  bar: a
+  baz: Int
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (type_struct
+    (type_definition
+      (type_identifier)
+      (type_argument
+        (identifier)))
+    (type_struct_fields
+      (type_struct_field
+        (identifier)
+        (type_argument
+          (identifier)))
+      (type_struct_field
+        (identifier)
+        (type_argument
+          (type_definition
+            (type_identifier)))))))
+
+================================================================================
+Struct with multiple generic fields
+================================================================================
+
+type Foo<a, b> {
+  bar: a
+  baz: b
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (type_struct
+    (type_definition
+      (type_identifier)
+      (type_argument
+        (identifier))
+      (type_argument
+        (identifier)))
+    (type_struct_fields
+      (type_struct_field
+        (identifier)
+        (type_argument
+          (identifier)))
+      (type_struct_field
+        (identifier)
+        (type_argument
+          (identifier))))))
