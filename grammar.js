@@ -16,7 +16,11 @@ module.exports = grammar({
       $.import,
       $.type_alias,
       $.type_struct,
-      $.type_enum
+      $.type_enum,
+      $.constant, // TODO @ riley
+      // $.function, // TODO riley
+      // $.test, // TODO @ riley
+      // $.validator, // TODO @ riley
     ),
 
     // Handles import definitions
@@ -73,6 +77,21 @@ module.exports = grammar({
     type_definition: ($) =>
       seq($.type_identifier, optional(seq("<", repeat_separated_by($.type_argument, ","), ">"))),
     type_argument: ($) => field("type_argument", choice($.identifier, $.type_definition)),
+
+    // Constants
+    constant: ($) => seq("const", $.identifier, "=", $.constant_value),
+    constant_value: ($) => choice( // TODO check validity here.
+      $.int,
+      $.string,
+      $.bytes,
+      $.curvepoint,
+    ),
+
+    // Literals - TODO validity here.
+    // int: ($) => token(/[0-9]+/),
+    // string: ($) => token(/"[^"]*"/),
+    // bytes: ($) => token(/b"[^"]*"/),
+    // curvepoint: ($) => token(/P\([0-9]+, [0-9]+\)/),
 
     //  Comments
     module_comment: (_$) => token(seq("////", /.*/)),
