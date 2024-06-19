@@ -17,10 +17,7 @@ module.exports = grammar({
       $.type_alias,
       $.type_struct,
       $.type_enum,
-      $.constant, // TODO @ riley
-      // $.function, // TODO riley
-      // $.test, // TODO @ riley
-      // $.validator, // TODO @ riley
+      $.constant,
     ),
 
     // Handles import definitions
