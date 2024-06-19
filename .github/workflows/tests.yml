@@ -10,11 +10,25 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - name: 📥 Checkout repository
+        uses: actions/checkout@v4
 
-      - uses: pnpm/action-setup@v2
+      - name: 📦 Setup pnpm
+        uses: pnpm/action-setup@v3
         with:
           version: latest
-          run_install: true
 
-      - run: pnpm test
+      - name: 📦 Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          cache: "pnpm"
+          node-version: "latest"
+
+      - name: 🛠️ Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: 🧪 Run fmt check
+        run: pnpm prettier --check .
+
+      - name: 🧪 Run test
+        run: pnpm test
