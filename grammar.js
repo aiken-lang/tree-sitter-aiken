@@ -79,19 +79,23 @@ module.exports = grammar({
     type_argument: ($) => field("type_argument", choice($.identifier, $.type_definition)),
 
     // Constants
-    constant: ($) => seq("const", $.identifier, "=", $.constant_value),
-    constant_value: ($) => choice( // TODO check validity here.
+    constant: ($) => seq("const", $.identifier, optional(seq(":", $.type_definition)), "=", $.constant_value),
+    constant_value: ($) => choice(
       $.int,
       $.string,
       $.bytes,
-      $.curvepoint,
+      // $.curvepoint - Should this be here?
     ),
 
-    // Literals - TODO validity here.
-    // int: ($) => token(/[0-9]+/),
-    // string: ($) => token(/"[^"]*"/),
-    // bytes: ($) => token(/b"[^"]*"/),
-    // curvepoint: ($) => token(/P\([0-9]+, [0-9]+\)/),
+    base10: (_$) => token(/[0-9]+/),
+    base10_underscore: (_$) => token(/[0-9]+(_[0-9]+)+/),
+    base16: (_$) => token(/0x[0-9a-fA-F]+/),
+    int: ($) => choice($.base10, $.base10_underscore, $.base16),
+
+    string: ($) => seq("@", $.string_inner),
+    bytes: ($) => seq(optional("#"), $.string_inner),
+    string_inner: ($) => seq('"', repeat(choice(/[^\\"]/, $.escape)), '"'),
+    escape: ($) => token(/\\./),
 
     //  Comments
     module_comment: (_$) => token(seq("////", /.*/)),
