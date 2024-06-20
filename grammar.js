@@ -48,33 +48,39 @@ module.exports = grammar({
       ),
 
     // Handles type aliasing definitions
-    type_alias: ($) =>
-      seq("type", $.type_definition, "=", $.type_definition),
+    type_alias: ($) => seq("type", $.type_definition, "=", $.type_definition),
 
     // Handle enum type definitions
-    type_enum: ($) => seq("type", $.type_definition, block(repeat1(
-      $.type_enum_variant,
-    ))),
-    type_enum_variant: ($) => choice(
-      // Foo
-      $.type_identifier,
-      // Foo(Foo)
-      // Foo(a, b)
-      seq($.type_identifier, seq("(", repeat_separated_by($.type_argument, ","), ")")),
-      // Foo { bar: Baz }
-      $.type_struct_inner
-    ),
+    type_enum: ($) =>
+      seq("type", $.type_definition, block(repeat1($.type_enum_variant))),
+    type_enum_variant: ($) =>
+      choice(
+        // Foo
+        $.type_identifier,
+        // Foo(Foo)
+        // Foo(a, b)
+        seq(
+          $.type_identifier,
+          seq("(", repeat_separated_by($.type_argument, ","), ")")
+        ),
+        // Foo { bar: Baz }
+        $.type_struct_inner
+      ),
 
     // Handle struct type definitions (syntax sugar for enumerations with only one element)
-    type_struct: ($) =>
-      seq("type", $.type_struct_inner),
-    type_struct_inner: ($) => seq($.type_definition, block($.type_struct_fields)),
+    type_struct: ($) => seq("type", $.type_struct_inner),
+    type_struct_inner: ($) =>
+      seq($.type_definition, block($.type_struct_fields)),
     type_struct_fields: ($) => repeat1($.type_struct_field),
     type_struct_field: ($) => seq($.identifier, ":", $.type_argument),
 
     type_definition: ($) =>
-      seq($.type_identifier, optional(seq("<", repeat_separated_by($.type_argument, ","), ">"))),
-    type_argument: ($) => field("type_argument", choice($.identifier, $.type_definition)),
+      seq(
+        $.type_identifier,
+        optional(seq("<", repeat_separated_by($.type_argument, ","), ">"))
+      ),
+    type_argument: ($) =>
+      field("type_argument", choice($.identifier, $.type_definition)),
 
     // Functions
     function: ($) =>
@@ -208,5 +214,5 @@ function repeat_separated_by(
 }
 
 function block(rule, start_sep = "{", end_sep = "}") {
-  return seq(start_sep, rule, end_sep)
+  return seq(start_sep, rule, end_sep);
 }
