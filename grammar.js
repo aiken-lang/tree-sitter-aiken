@@ -3,23 +3,20 @@
 module.exports = grammar({
   name: "aiken",
   rules: {
-    source_file: ($) => repeat(choice(
-      $._definition,
-      $.module_comment,
-      $.definition_comment,
-      $.comment,
-    )),
-    extras: ($) => choice(
-      $.type_struct_inner
-    ),
-    _definition: ($) => choice(
-      $.import,
-      $.type_alias,
-      $.type_struct,
-      $.type_enum,
-      $.constant,
-      $.function
-    ),
+    source_file: ($) =>
+      repeat(
+        choice($._definition, $.module_comment, $.definition_comment, $.comment)
+      ),
+    extras: ($) => choice($.type_struct_inner),
+    _definition: ($) =>
+      choice(
+        $.import,
+        $.type_alias,
+        $.type_struct,
+        $.type_enum,
+        $.constant,
+        $.function
+      ),
 
     // Handles import definitions
     // use foo
@@ -93,43 +90,42 @@ module.exports = grammar({
         block(repeat($.expression))
       ),
 
-    function_arguments: ($) => seq("(", optional(repeat_separated_by($.function_argument, ",")), ")"),
+    function_arguments: ($) =>
+      seq("(", optional(repeat_separated_by($.function_argument, ",")), ")"),
     function_argument: ($) =>
       seq($.identifier, optional(seq(":", $.type_definition))),
 
     // Expressions - WIP
-    expression: ($) => choice(
-      $.identifier,
-      $.access,
-      $.int,
-      $.string,
-      // $.var,
-      $.function,
-      $.list,
-      $.call,
-      // $.bin_op,
-      $.bytes,
-      // $.curvepoint - Add this later.
-      // $.pipeline,
-      $.assignment,
-      // $.trace,
-      // $.trace_if_false,
-      // $.when,
-      // $.if,
-      // $.field_access,
-      // $.tuple,
-      // $.pair,
-      // $.tuple_index,
-      // $.error_term,
-      // $.record_update,
-      // $.unary_op,
-      // $.logical_op_chain,
-    ),
+    expression: ($) =>
+      choice(
+        $.identifier,
+        $.access,
+        $.int,
+        $.string,
+        // $.var,
+        $.function,
+        $.list,
+        $.call,
+        // $.bin_op,
+        $.bytes,
+        // $.curvepoint - Add this later.
+        // $.pipeline,
+        $.assignment
+        // $.trace,
+        // $.trace_if_false,
+        // $.when,
+        // $.if,
+        // $.field_access,
+        // $.tuple,
+        // $.pair,
+        // $.tuple_index,
+        // $.error_term,
+        // $.record_update,
+        // $.unary_op,
+        // $.logical_op_chain,
+      ),
 
-    assignment: ($) => choice(
-      $.let_assignment,
-      $.expect_assignment
-    ),
+    assignment: ($) => choice($.let_assignment, $.expect_assignment),
     let_assignment: ($) =>
       seq(
         "let",
@@ -138,39 +134,42 @@ module.exports = grammar({
         "=",
         $.expression
       ),
-    expect_assignment: ($) =>
-      seq(
-        "expect",
-        $.match_pattern,
-        "=",
-        $.expression
-      ),
+    expect_assignment: ($) => seq("expect", $.match_pattern, "=", $.expression),
 
     // Patterns for case and expect
-    match_pattern: ($) => seq($.type_identifier, "(", repeat_separated_by($.match_pattern_argument, ","), ")"),
+    match_pattern: ($) =>
+      seq(
+        $.type_identifier,
+        "(",
+        repeat_separated_by($.match_pattern_argument, ","),
+        ")"
+      ),
     match_pattern_argument: ($) => choice($.identifier, $.discard),
 
     list: ($) => seq("[", repeat_separated_by($.expression, ","), "]"),
     call: ($) => seq(choice($.identifier, $.access), $.call_arguments),
-    call_arguments: ($) => seq("(", optional(repeat_separated_by($.expression, ",")), ")"),
+    call_arguments: ($) =>
+      seq("(", optional(repeat_separated_by($.expression, ",")), ")"),
     access: ($) => seq($.identifier, ".", choice($.identifier, $.access)),
     pipeline: ($) => seq($.expression, "|>", $.expression),
 
     // Constants
-    constant: ($) => seq(
-      optional("pub"),
-      "const",
-      $.identifier,
-      optional(seq(":", $.type_definition)),
-      "=",
-      $.constant_value
-    ),
-    constant_value: ($) => choice(
-      $.int,
-      $.string,
-      $.bytes,
-      // $.curvepoint - Add this later.
-    ),
+    constant: ($) =>
+      seq(
+        optional("pub"),
+        "const",
+        $.identifier,
+        optional(seq(":", $.type_definition)),
+        "=",
+        $.constant_value
+      ),
+    constant_value: ($) =>
+      choice(
+        $.int,
+        $.string,
+        $.bytes
+        // $.curvepoint - Add this later.
+      ),
 
     base10: (_$) => token(/[0-9]+/),
     base10_underscore: (_$) => token(/[0-9]+(_[0-9]+)+/),
