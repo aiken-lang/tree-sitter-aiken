@@ -38,6 +38,30 @@
     }
   },
   {
+    "type": "bin_op",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "binary_operator",
+          "named": true
+        },
+        {
+          "type": "expression",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "binary_operator",
+    "named": true,
+    "fields": {}
+  },
+  {
     "type": "bytes",
     "named": true,
     "fields": {},
@@ -177,6 +201,10 @@
           "named": true
         },
         {
+          "type": "bin_op",
+          "named": true
+        },
+        {
           "type": "bytes",
           "named": true
         },
@@ -201,7 +229,15 @@
           "named": true
         },
         {
+          "type": "pipeline",
+          "named": true
+        },
+        {
           "type": "string",
+          "named": true
+        },
+        {
+          "type": "trace",
           "named": true
         }
       ]
@@ -414,6 +450,21 @@
     "fields": {}
   },
   {
+    "type": "pipeline",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "expression",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
     "type": "source_file",
     "named": true,
     "fields": {},
@@ -485,6 +536,21 @@
       "types": [
         {
           "type": "escape",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "trace",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": false,
+      "required": true,
+      "types": [
+        {
+          "type": "expression",
           "named": true
         }
       ]
@@ -709,11 +775,23 @@
     }
   },
   {
+    "type": "!=",
+    "named": false
+  },
+  {
     "type": "\"",
     "named": false
   },
   {
     "type": "#",
+    "named": false
+  },
+  {
+    "type": "%",
+    "named": false
+  },
+  {
+    "type": "&&",
     "named": false
   },
   {
@@ -725,7 +803,19 @@
     "named": false
   },
   {
+    "type": "*",
+    "named": false
+  },
+  {
+    "type": "+",
+    "named": false
+  },
+  {
     "type": ",",
+    "named": false
+  },
+  {
+    "type": "-",
     "named": false
   },
   {
@@ -749,11 +839,23 @@
     "named": false
   },
   {
+    "type": "<=",
+    "named": false
+  },
+  {
     "type": "=",
     "named": false
   },
   {
+    "type": "==",
+    "named": false
+  },
+  {
     "type": ">",
+    "named": false
+  },
+  {
+    "type": ">=",
     "named": false
   },
   {
@@ -821,6 +923,14 @@
     "named": false
   },
   {
+    "type": "trace",
+    "named": false
+  },
+  {
+    "type": "trace_if_false",
+    "named": false
+  },
+  {
     "type": "type",
     "named": false
   },
@@ -834,6 +944,10 @@
   },
   {
     "type": "|>",
+    "named": false
+  },
+  {
+    "type": "||",
     "named": false
   },
   {

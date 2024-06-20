@@ -102,16 +102,16 @@ module.exports = grammar({
         $.access,
         $.int,
         $.string,
-        // $.var,
+        // $.var, ?
         $.function,
         $.list,
         $.call,
-        // $.bin_op,
+        $.bin_op,
         $.bytes,
         // $.curvepoint - Add this later.
-        // $.pipeline,
-        $.assignment
-        // $.trace,
+        $.pipeline,
+        $.assignment,
+        $.trace,
         // $.trace_if_false,
         // $.when,
         // $.if,
@@ -125,16 +125,35 @@ module.exports = grammar({
         // $.logical_op_chain,
       ),
 
+    bin_op: ($) =>
+      prec.left(seq($.expression, $.binary_operator, $.expression)),
+    binary_operator: ($) =>
+      choice(
+        "+",
+        "-",
+        "*",
+        "/",
+        "%",
+        "==",
+        "!=",
+        "<",
+        "<=",
+        ">",
+        ">=",
+        "&&",
+        "||"
+      ),
+
     assignment: ($) => choice($.let_assignment, $.expect_assignment),
     let_assignment: ($) =>
-      seq(
+      prec.right(seq(
         "let",
         $.identifier,
         optional(seq(":", $.type_definition)),
         "=",
         $.expression
-      ),
-    expect_assignment: ($) => seq("expect", $.match_pattern, "=", $.expression),
+      )),
+    expect_assignment: ($) => prec.right(seq("expect", $.match_pattern, "=", $.expression)),
 
     // Patterns for case and expect
     match_pattern: ($) =>
@@ -151,7 +170,7 @@ module.exports = grammar({
     call_arguments: ($) =>
       seq("(", optional(repeat_separated_by($.expression, ",")), ")"),
     access: ($) => seq($.identifier, ".", choice($.identifier, $.access)),
-    pipeline: ($) => seq($.expression, "|>", $.expression),
+    pipeline: ($) => prec.left(seq($.expression, "|>", $.expression)),
 
     // Constants
     constant: ($) =>
@@ -170,6 +189,10 @@ module.exports = grammar({
         $.bytes
         // $.curvepoint - Add this later.
       ),
+    
+    // Trace
+    trace: ($) => prec.left(seq("trace", $.expression)),
+    trace_if_false: ($) => seq("trace_if_false", $.expression),
 
     base10: (_$) => token(/[0-9]+/),
     base10_underscore: (_$) => token(/[0-9]+(_[0-9]+)+/),
