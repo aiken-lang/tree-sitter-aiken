@@ -1,0 +1,88 @@
+================================================================================
+Basic Function Test - Int
+================================================================================
+
+pub fn five () {
+    25
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (function
+    (identifier)
+    (function_arguments)
+    (expression (int (base10)))
+  ))
+
+================================================================================
+Basic Function Test - List
+================================================================================
+
+fn list () {
+    [10, 25]
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (function
+    (identifier)
+    (function_arguments)
+    (expression
+      (list
+        (expression (int (base10)))
+        (expression (int (base10)))
+      )
+    )
+  ))
+
+================================================================================
+Basic Function Test - Sequence
+================================================================================
+
+fn sequence () {
+    foo(bar(x))
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (function
+    (identifier)
+    (function_arguments)
+    (expression
+      (call
+        (identifier)
+        (call_arguments
+          (expression (call 
+            (identifier)
+            (call_arguments (expression (identifier))))))
+      )
+    )
+  ))
+
+================================================================================
+Basic Function Test - Sequence with `.` access
+================================================================================
+
+fn sequence () {
+    nike.foo(bar(x))
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (function
+    (identifier)
+    (function_arguments)
+    (expression
+      (call
+        (access (identifier) (identifier))
+        (call_arguments
+          (expression (call 
+            (identifier)
+            (call_arguments (expression (identifier))))))
+      )
+    )
+  ))
