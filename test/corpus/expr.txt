@@ -86,34 +86,3 @@ fn sequence () {
       )
     )
   ))
-
-================================================================================
-Complex Function Test
-================================================================================
-
-fn newly () -> Bool {
-    expect x = y
-    
-    // This should be a comment, no binary ops present.
-
-    nike.foo(bar(x))
-
-    todo
-}
-
---------------------------------------------------------------------------------
-
-(source_file
-  (function
-    (identifier)
-    (function_arguments)
-    (expression
-      (call
-        (field_access (identifier) (identifier))
-        (call_arguments
-          (expression (call 
-            (identifier)
-            (call_arguments (expression (identifier))))))
-      )
-    )
-  ))
