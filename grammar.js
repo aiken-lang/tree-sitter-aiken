@@ -97,33 +97,35 @@ module.exports = grammar({
 
     // Expressions - WIP
     expression: ($) =>
-      prec.right(choice(
-        $.any_comment,
-        $.identifier,
-        $.field_access,
-        $.int,
-        $.string,
-        // $.var, ?
-        $.function,
-        $.list,
-        $.call,
-        $.bin_op,
-        $.bytes,
-        // $.curvepoint - Add this later.
-        $.pipeline,
-        $.assignment,
-        $.trace,
-        $.trace_if_false,
-        $.todo,
-        $.when,
-        $.if,
-        $.tuple,
-        $.pair,
-        $.error_term,
-        $.record_update,
-        // $.unary_op,
-        $.logical_op_chain,
-      )),
+      prec.right(
+        choice(
+          $.any_comment,
+          $.identifier,
+          $.field_access,
+          $.int,
+          $.string,
+          // $.var, ?
+          $.function,
+          $.list,
+          $.call,
+          $.bin_op,
+          $.bytes,
+          // $.curvepoint - Add this later.
+          $.pipeline,
+          $.assignment,
+          $.trace,
+          $.trace_if_false,
+          $.todo,
+          $.when,
+          $.if,
+          $.tuple,
+          $.pair,
+          $.error_term,
+          $.record_update,
+          // $.unary_op,
+          $.logical_op_chain
+        )
+      ),
     record_update: ($) =>
       seq(
         $.type_identifier,
@@ -140,22 +142,17 @@ module.exports = grammar({
     tuple: ($) => seq("(", repeat_separated_by($.expression, ","), ")"),
     pair: ($) => seq("Pair", "(", $.expression, ",", $.expression, ")"),
 
-    if: ($) => seq(
-      "if",
-      $.expression,
-      block(
-        repeat($.expression)),
-        optional(seq("else", block(repeat($.expression)))
-      )
-    ),
+    if: ($) =>
+      seq(
+        "if",
+        $.expression,
+        block(repeat($.expression)),
+        optional(seq("else", block(repeat($.expression))))
+      ),
     when: ($) => seq("when", $.expression, "is", block(repeat1($.when_case))),
     when_case: ($) =>
-      prec.right(seq(
-        $.match_pattern,
-        "->",
-        repeat($.expression)
-      )),
-    
+      prec.right(seq($.match_pattern, "->", repeat($.expression))),
+
     logical_op_chain: ($) => choice($.and_chain, $.or_chain),
     and_chain: ($) => seq("and", block(repeat_separated_by($.expression, ","))),
     or_chain: ($) => seq("or", block(repeat_separated_by($.expression, ","))),
@@ -183,32 +180,37 @@ module.exports = grammar({
 
     assignment: ($) => choice($.let_assignment, $.expect_assignment),
     let_assignment: ($) =>
-      prec.right(seq(
-        "let",
-        $.identifier,
-        optional(seq(":", $.type_definition)),
-        "=",
-        choice($.expression, $.match_pattern)
-      )),
-    expect_assignment: ($) => prec.right(seq("expect", $.match_pattern, "=", $.expression)),
+      prec.right(
+        seq(
+          "let",
+          $.identifier,
+          optional(seq(":", $.type_definition)),
+          "=",
+          choice($.expression, $.match_pattern)
+        )
+      ),
+    expect_assignment: ($) =>
+      prec.right(seq("expect", $.match_pattern, "=", $.expression)),
 
     // Patterns for case and expect
     match_pattern: ($) =>
-      prec.right(seq(
-        $.type_identifier,
-        optional(seq(
-          "(",
-          repeat_separated_by($.match_pattern_argument, ","),
-          ")"
-        ))
-      )),
-    match_pattern_argument: ($) => choice($.match_pattern, $.identifier, $.discard),
+      prec.right(
+        seq(
+          $.type_identifier,
+          optional(
+            seq("(", repeat_separated_by($.match_pattern_argument, ","), ")")
+          )
+        )
+      ),
+    match_pattern_argument: ($) =>
+      choice($.match_pattern, $.identifier, $.discard),
 
     list: ($) => seq("[", repeat_separated_by($.expression, ","), "]"),
     call: ($) => seq(choice($.identifier, $.field_access), $.call_arguments),
     call_arguments: ($) =>
       seq("(", optional(repeat_separated_by($.expression, ",")), ")"),
-    field_access: ($) => seq($.identifier, ".", choice($.identifier, $.field_access)),
+    field_access: ($) =>
+      seq($.identifier, ".", choice($.identifier, $.field_access)),
     pipeline: ($) => prec.left(seq($.expression, "|>", $.expression)),
 
     // Constants
@@ -228,7 +230,7 @@ module.exports = grammar({
         $.bytes
         // $.curvepoint - Add this later.
       ),
-    
+
     // Trace
     trace: ($) => prec.left(seq("trace", $.expression)),
     trace_if_false: ($) => seq($.expression, "?"),
@@ -244,7 +246,8 @@ module.exports = grammar({
     escape: (_$) => token(/\\./),
 
     //  Comments
-    any_comment: ($) => choice($.module_comment, $.definition_comment, $.comment),
+    any_comment: ($) =>
+      choice($.module_comment, $.definition_comment, $.comment),
     module_comment: (_$) => token(seq("////", /.*/)),
     definition_comment: (_$) => token(seq("///", /.*/)),
     comment: (_$) => token(seq("//", /.*/)),
