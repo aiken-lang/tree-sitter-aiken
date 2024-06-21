@@ -97,9 +97,10 @@ module.exports = grammar({
 
     // Expressions - WIP
     expression: ($) =>
-      choice(
+      prec.right(choice(
+        $.any_comment,
         $.identifier,
-        $.access,
+        $.field_access,
         $.int,
         $.string,
         // $.var, ?
@@ -112,21 +113,57 @@ module.exports = grammar({
         $.pipeline,
         $.assignment,
         $.trace,
-        // $.trace_if_false,
-        // $.when,
-        // $.if,
-        // $.field_access,
-        // $.tuple,
-        // $.pair,
-        // $.tuple_index,
-        // $.error_term,
-        // $.record_update,
+        $.trace_if_false,
+        $.todo,
+        $.when,
+        $.if,
+        $.tuple,
+        $.pair,
+        $.error_term,
+        $.record_update,
         // $.unary_op,
-        // $.logical_op_chain,
+        $.logical_op_chain,
+      )),
+    record_update: ($) =>
+      seq(
+        $.type_identifier,
+        "{",
+        "..",
+        $.identifier,
+        ",",
+        repeat_separated_by($.record_update_field, ","),
+        "}"
       ),
+    record_update_field: ($) => seq($.identifier, ":", $.expression),
+
+    error_term: ($) => prec.right(seq("fail", optional($.string))),
+    tuple: ($) => seq("(", repeat_separated_by($.expression, ","), ")"),
+    pair: ($) => seq("Pair", "(", $.expression, ",", $.expression, ")"),
+
+    if: ($) => seq(
+      "if",
+      $.expression,
+      block(
+        repeat($.expression)),
+        optional(seq("else", block(repeat($.expression)))
+      )
+    ),
+    when: ($) => seq("when", $.expression, "is", block(repeat1($.when_case))),
+    when_case: ($) =>
+      prec.right(seq(
+        $.match_pattern,
+        "->",
+        repeat($.expression)
+      )),
+    
+    logical_op_chain: ($) => choice($.and_chain, $.or_chain),
+    and_chain: ($) => seq("and", block(repeat_separated_by($.expression, ","))),
+    or_chain: ($) => seq("or", block(repeat_separated_by($.expression, ","))),
+
+    todo: (_$) => "todo",
 
     bin_op: ($) =>
-      prec.left(seq($.expression, $.binary_operator, $.expression)),
+      prec.right(seq($.expression, $.binary_operator, $.expression)),
     binary_operator: ($) =>
       choice(
         "+",
@@ -151,25 +188,27 @@ module.exports = grammar({
         $.identifier,
         optional(seq(":", $.type_definition)),
         "=",
-        $.expression
+        choice($.expression, $.match_pattern)
       )),
     expect_assignment: ($) => prec.right(seq("expect", $.match_pattern, "=", $.expression)),
 
     // Patterns for case and expect
     match_pattern: ($) =>
-      seq(
+      prec.right(seq(
         $.type_identifier,
-        "(",
-        repeat_separated_by($.match_pattern_argument, ","),
-        ")"
-      ),
-    match_pattern_argument: ($) => choice($.identifier, $.discard),
+        optional(seq(
+          "(",
+          repeat_separated_by($.match_pattern_argument, ","),
+          ")"
+        ))
+      )),
+    match_pattern_argument: ($) => choice($.match_pattern, $.identifier, $.discard),
 
     list: ($) => seq("[", repeat_separated_by($.expression, ","), "]"),
-    call: ($) => seq(choice($.identifier, $.access), $.call_arguments),
+    call: ($) => seq(choice($.identifier, $.field_access), $.call_arguments),
     call_arguments: ($) =>
       seq("(", optional(repeat_separated_by($.expression, ",")), ")"),
-    access: ($) => seq($.identifier, ".", choice($.identifier, $.access)),
+    field_access: ($) => seq($.identifier, ".", choice($.identifier, $.field_access)),
     pipeline: ($) => prec.left(seq($.expression, "|>", $.expression)),
 
     // Constants
@@ -192,7 +231,7 @@ module.exports = grammar({
     
     // Trace
     trace: ($) => prec.left(seq("trace", $.expression)),
-    trace_if_false: ($) => seq("trace_if_false", $.expression),
+    trace_if_false: ($) => seq($.expression, "?"),
 
     base10: (_$) => token(/[0-9]+/),
     base10_underscore: (_$) => token(/[0-9]+(_[0-9]+)+/),
@@ -205,6 +244,7 @@ module.exports = grammar({
     escape: (_$) => token(/\\./),
 
     //  Comments
+    any_comment: ($) => choice($.module_comment, $.definition_comment, $.comment),
     module_comment: (_$) => token(seq("////", /.*/)),
     definition_comment: (_$) => token(seq("///", /.*/)),
     comment: (_$) => token(seq("//", /.*/)),
