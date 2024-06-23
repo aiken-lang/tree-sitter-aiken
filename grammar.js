@@ -9,7 +9,14 @@ module.exports = grammar({
       ),
     extras: ($) => choice($.type_struct_inner),
     _definition: ($) =>
-      choice($.import, $.type_alias, $.type_struct, $.type_enum, $.constant),
+      choice(
+        $.import,
+        $.type_alias,
+        $.type_struct,
+        $.type_enum,
+        $.constant,
+        $.function
+      ),
 
     // Handles import definitions
     // use foo
@@ -72,9 +79,84 @@ module.exports = grammar({
     type_argument: ($) =>
       field("type_argument", choice($.identifier, $.type_definition)),
 
+    // Functions
+    function: ($) =>
+      seq(
+        optional("pub"),
+        "fn",
+        optional($.identifier),
+        $.function_arguments,
+        optional(seq("->", $.type_definition)),
+        block(repeat($.expression))
+      ),
+
+    function_arguments: ($) =>
+      seq("(", optional(repeat_separated_by($.function_argument, ",")), ")"),
+    function_argument: ($) =>
+      seq($.identifier, optional(seq(":", $.type_definition))),
+
+    // Expressions - WIP
+    expression: ($) =>
+      choice(
+        $.identifier,
+        $.access,
+        $.int,
+        $.string,
+        // $.var,
+        $.function,
+        $.list,
+        $.call,
+        // $.bin_op,
+        $.bytes,
+        // $.curvepoint - Add this later.
+        // $.pipeline,
+        $.assignment
+        // $.trace,
+        // $.trace_if_false,
+        // $.when,
+        // $.if,
+        // $.field_access,
+        // $.tuple,
+        // $.pair,
+        // $.tuple_index,
+        // $.error_term,
+        // $.record_update,
+        // $.unary_op,
+        // $.logical_op_chain,
+      ),
+
+    assignment: ($) => choice($.let_assignment, $.expect_assignment),
+    let_assignment: ($) =>
+      seq(
+        "let",
+        $.identifier,
+        optional(seq(":", $.type_definition)),
+        "=",
+        $.expression
+      ),
+    expect_assignment: ($) => seq("expect", $.match_pattern, "=", $.expression),
+
+    // Patterns for case and expect
+    match_pattern: ($) =>
+      seq(
+        $.type_identifier,
+        "(",
+        repeat_separated_by($.match_pattern_argument, ","),
+        ")"
+      ),
+    match_pattern_argument: ($) => choice($.identifier, $.discard),
+
+    list: ($) => seq("[", repeat_separated_by($.expression, ","), "]"),
+    call: ($) => seq(choice($.identifier, $.access), $.call_arguments),
+    call_arguments: ($) =>
+      seq("(", optional(repeat_separated_by($.expression, ",")), ")"),
+    access: ($) => seq($.identifier, ".", choice($.identifier, $.access)),
+    pipeline: ($) => seq($.expression, "|>", $.expression),
+
     // Constants
     constant: ($) =>
       seq(
+        optional("pub"),
         "const",
         $.identifier,
         optional(seq(":", $.type_definition)),
@@ -86,7 +168,7 @@ module.exports = grammar({
         $.int,
         $.string,
         $.bytes
-        // $.curvepoint - Should this be here?
+        // $.curvepoint - Add this later.
       ),
 
     base10: (_$) => token(/[0-9]+/),
@@ -97,7 +179,7 @@ module.exports = grammar({
     string: ($) => seq("@", $.string_inner),
     bytes: ($) => seq(optional("#"), $.string_inner),
     string_inner: ($) => seq('"', repeat(choice(/[^\\"]/, $.escape)), '"'),
-    escape: ($) => token(/\\./),
+    escape: (_$) => token(/\\./),
 
     //  Comments
     module_comment: (_$) => token(seq("////", /.*/)),
