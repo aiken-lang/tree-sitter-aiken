@@ -1,0 +1,217 @@
+================================================================================
+Test foldl_1 test
+================================================================================
+
+test foldl_1() {
+  foldl(#[], 42, fn(byte, acc) { byte + acc }) == 42
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+      (test
+        (identifier)
+        (function_arguments)
+        (expression
+          (bin_op
+            (expression
+              (call
+                (identifier)
+                (call_arguments
+                  (expression
+                    (bytearray_literal
+                      (list)))
+                  (expression
+                    (int
+                      (base10)))
+                  (expression
+                    (function
+                      (function_arguments
+                        (function_argument
+                          (identifier))
+                        (function_argument
+                          (identifier)))
+                      (expression
+                        (bin_op
+                          (expression
+                            (identifier))
+                          (binary_operator)
+                          (expression
+                            (identifier)))))))))
+            (binary_operator)
+            (expression
+              (int
+                (base10)))))))
+
+================================================================================
+Test foldl_2 test
+================================================================================
+
+test foldl_2() {
+  foldl(#"acab", 0, fn(byte, acc) { acc * 256 + byte }) == 44203
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+      (test
+        (identifier)
+        (function_arguments)
+        (expression
+          (bin_op
+            (expression
+              (call
+                (identifier)
+                (call_arguments
+                  (expression
+                    (bytes
+                      (string_inner)))
+                  (expression
+                    (int
+                      (base10)))
+                  (expression
+                    (function
+                      (function_arguments
+                        (function_argument
+                          (identifier))
+                        (function_argument
+                          (identifier)))
+                      (expression
+                        (bin_op
+                          (expression
+                            (identifier))
+                          (binary_operator)
+                          (expression
+                            (bin_op
+                              (expression
+                                (int
+                                  (base10)))
+                              (binary_operator)
+                              (expression
+                                (identifier)))))))))))
+            (binary_operator)
+            (expression
+              (int
+                (base10)))))))
+
+================================================================================
+Test foldl_3 test
+================================================================================
+
+test foldl_3() {
+  foldl(
+    #"356cf088720a169dae0ce0bb1df8588944389fa43322f0d6ef4ed8c069bfd405",
+    0,
+    fn(byte, acc) { acc * 256 + byte },
+  ) == 24165060555594911913195642527692216679757672038384202527929620681761931383813
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+      (test
+        (identifier)
+        (function_arguments)
+        (expression
+          (bin_op
+            (expression
+              (call
+                (identifier)
+                (call_arguments
+                  (expression
+                    (bytes
+                      (string_inner)))
+                  (expression
+                    (int
+                      (base10)))
+                  (expression
+                    (function
+                      (function_arguments
+                        (function_argument
+                          (identifier))
+                        (function_argument
+                          (identifier)))
+                      (expression
+                        (bin_op
+                          (expression
+                            (identifier))
+                          (binary_operator)
+                          (expression
+                            (bin_op
+                              (expression
+                                (int
+                                  (base10)))
+                              (binary_operator)
+                              (expression
+                                (identifier)))))))))))
+            (binary_operator)
+            (expression
+              (int
+                (base10)))))))
+
+================================================================================
+Test foldl_4 test
+================================================================================
+
+test foldl_4() {
+  foldl(#[1, 2, 3, 4, 5], #"", flip(push)) == #[5, 4, 3, 2, 1]
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+      (test
+        (identifier)
+        (function_arguments)
+        (expression
+          (bin_op
+            (expression
+              (call
+                (identifier)
+                (call_arguments
+                  (expression
+                    (bytearray_literal
+                      (list
+                        (expression
+                          (int
+                            (base10)))
+                        (expression
+                          (int
+                            (base10)))
+                        (expression
+                          (int
+                            (base10)))
+                        (expression
+                          (int
+                            (base10)))
+                        (expression
+                          (int
+                            (base10))))))
+                  (expression
+                    (bytes
+                      (string_inner)))
+                  (expression
+                    (call
+                      (identifier)
+                      (call_arguments
+                        (expression
+                          (identifier))))))))
+            (binary_operator)
+            (expression
+              (bytearray_literal
+                (list
+                  (expression
+                    (int
+                      (base10)))
+                  (expression
+                    (int
+                      (base10)))
+                  (expression
+                    (int
+                      (base10)))
+                  (expression
+                    (int
+                      (base10)))
+                  (expression
+                    (int
+                      (base10))))))))))

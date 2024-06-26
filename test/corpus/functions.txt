@@ -78,7 +78,7 @@ fn sequence () {
     (function_arguments)
     (expression
       (call
-        (access (identifier) (identifier))
+        (field_access (identifier) (identifier))
         (call_arguments
           (expression (call 
             (identifier)
@@ -86,3 +86,69 @@ fn sequence () {
       )
     )
   ))
+
+================================================================================
+Basic Function Test - Sequence with `..` list in pattern
+================================================================================
+
+pub fn choice(self: List<Option<a>>) -> Option<a> {
+  when self is {
+    [] -> None
+    [head, ..others] ->
+      when head is {
+        None -> choice(others)
+        _ -> head
+      }
+  }
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+      (function
+        (identifier)
+        (function_arguments
+          (function_argument
+            (identifier)
+            (type_definition
+              (type_identifier)
+              (type_argument
+                type_argument: (type_definition
+                  (type_identifier)
+                  (type_argument
+                    type_argument: (identifier)))))))
+        (type_definition
+          (type_identifier)
+          (type_argument
+            type_argument: (identifier)))
+        (expression
+          (when
+            (expression
+              (identifier))
+            (when_case
+              (list)
+              (expression
+                (match_pattern
+                  (type_identifier))))
+            (when_case
+              (list
+                (expression
+                  (identifier))
+                (identifier))
+              (expression
+                (when
+                  (expression
+                    (identifier))
+                  (when_case
+                    (match_pattern
+                      (type_identifier))
+                    (expression
+                      (call
+                        (identifier)
+                        (call_arguments
+                          (expression
+                            (identifier))))))
+                  (when_case
+                    (discard)
+                    (expression
+                      (identifier))))))))))
