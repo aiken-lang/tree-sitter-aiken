@@ -223,6 +223,10 @@
       "required": true,
       "types": [
         {
+          "type": "discard",
+          "named": true
+        },
+        {
           "type": "expression",
           "named": true
         },
@@ -244,6 +248,10 @@
         },
         {
           "type": "tuple",
+          "named": true
+        },
+        {
+          "type": "type_definition",
           "named": true
         }
       ]
@@ -374,6 +382,25 @@
         },
         {
           "type": "identifier",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "field_capture_element",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "identifier",
+          "named": true
+        },
+        {
+          "type": "type_definition",
           "named": true
         }
       ]
@@ -563,11 +590,31 @@
       "required": true,
       "types": [
         {
+          "type": "discard",
+          "named": true
+        },
+        {
           "type": "expression",
           "named": true
         },
         {
           "type": "identifier",
+          "named": true
+        },
+        {
+          "type": "list",
+          "named": true
+        },
+        {
+          "type": "match_pattern",
+          "named": true
+        },
+        {
+          "type": "pair",
+          "named": true
+        },
+        {
+          "type": "tuple",
           "named": true
         },
         {
@@ -623,6 +670,10 @@
       "multiple": true,
       "required": true,
       "types": [
+        {
+          "type": "field_capture_element",
+          "named": true
+        },
         {
           "type": "match_pattern_argument",
           "named": true
@@ -1169,11 +1220,15 @@
       "required": false,
       "types": [
         {
-          "type": "expression",
+          "type": "function",
           "named": true
         },
         {
           "type": "function_arguments",
+          "named": true
+        },
+        {
+          "type": "type_definition",
           "named": true
         }
       ]

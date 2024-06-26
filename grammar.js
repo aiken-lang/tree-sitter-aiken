@@ -86,10 +86,10 @@ module.exports = grammar({
         "validator",
         // optional($.identifier),
         optional($.function_arguments),
-        // optional(seq("->", $.type_definition)),
-        block(repeat($.expression))
+        optional(seq("->", $.type_definition)),
+        block(repeat($.function))
       ),
-    
+
     // Tests are basically functions with the 'test' keyword
     test: ($) =>
       seq(
@@ -108,15 +108,22 @@ module.exports = grammar({
         "fn",
         optional($.identifier),
         $.function_arguments,
-        optional(seq("->", choice($.type_definition, $.identifier, $.function_type))),
+        optional(
+          seq("->", choice($.type_definition, $.identifier, $.function_type))
+        ),
         block(repeat($.expression))
       ),
 
     function_arguments: ($) =>
       seq("(", optional(repeat_separated_by($.function_argument, ",")), ")"),
     function_argument: ($) =>
-      seq(choice($.identifier, $.type_definition), optional(seq(":", choice($.identifier, $.type_definition, $.function_type)))),
-    
+      seq(
+        choice($.identifier, $.type_definition),
+        optional(
+          seq(":", choice($.identifier, $.type_definition, $.function_type))
+        )
+      ),
+
     function_type: ($) =>
       seq(
         "fn",
@@ -177,7 +184,7 @@ module.exports = grammar({
         "if",
         $.expression,
         block(repeat($.expression)),
-        optional(seq("else", choice($.if, block(repeat($.expression))))),
+        optional(seq("else", choice($.if, block(repeat($.expression)))))
       ),
     when: ($) => seq("when", $.expression, "is", block(repeat1($.when_case))),
     when_case: ($) =>
@@ -221,7 +228,14 @@ module.exports = grammar({
       prec.right(
         seq(
           "let",
-          $.identifier,
+          choice(
+            $.match_pattern,
+            $.list,
+            $.tuple,
+            $.pair,
+            $.identifier,
+            $.discard
+          ),
           optional(seq(":", $.type_definition)),
           "=",
           $.expression
@@ -231,10 +245,23 @@ module.exports = grammar({
       prec.right(
         seq(
           "expect",
-          choice($.match_pattern, $.list, $.tuple, $.pair, $.identifier),
+          choice(
+            $.match_pattern,
+            $.list,
+            $.tuple,
+            $.pair,
+            $.identifier,
+            $.discard
+          ),
+          optional(seq(":", $.type_definition)),
           "=",
           $.expression
         )
+      ),
+    field_capture_element: ($) =>
+      choice(
+        $.identifier,
+        seq($.identifier, ":", choice($.type_definition, $.identifier))
       ),
 
     // Patterns for case and expect
@@ -243,7 +270,26 @@ module.exports = grammar({
         seq(
           $.type_identifier,
           optional(
-            seq("(", repeat_separated_by($.match_pattern_argument, ","), ")")
+            choice(
+              seq(
+                "(",
+                repeat_separated_by(
+                  choice($.match_pattern_argument, ".."),
+                  ","
+                ),
+                ")"
+              ),
+              seq(
+                "{",
+                optional(
+                  repeat_separated_by(
+                    choice($.field_capture_element, ".."),
+                    ","
+                  )
+                ),
+                "}"
+              )
+            )
           )
         )
       ),
@@ -299,8 +345,9 @@ module.exports = grammar({
 
     string: ($) => seq("@", $.string_inner),
     bytes: ($) => seq(optional("#"), $.string_inner),
-    bytearray_literal: ($) => seq('#', $.list),
-    string_inner: ($) => prec.right(seq('"', repeat(choice(/[^\\"]/, $.escape)), '"')),
+    bytearray_literal: ($) => seq("#", $.list),
+    string_inner: ($) =>
+      prec.right(seq('"', repeat(choice(/[^\\"]/, $.escape)), '"')),
     escape: (_$) => token(/\\./),
 
     //  Comments
