@@ -15,7 +15,9 @@ module.exports = grammar({
         $.type_struct,
         $.type_enum,
         $.constant,
-        $.function
+        $.function,
+        $.validator,
+        $.test
       ),
 
     // Handles import definitions
@@ -77,7 +79,29 @@ module.exports = grammar({
         optional(seq("<", repeat_separated_by($.type_argument, ","), ">"))
       ),
     type_argument: ($) =>
-      field("type_argument", choice($.identifier, $.type_definition)),
+      field("type_argument", choice($.identifier, $.type_definition, $.tuple)),
+
+    // Validators are basically functions with the 'validator' keyword
+    validator: ($) =>
+      seq(
+        optional("pub"),
+        "validator",
+        optional($.identifier),
+        $.function_arguments,
+        optional(seq("->", $.type_definition)),
+        block(repeat($.expression))
+      ),
+    
+    // Tests are basically functions with the 'test' keyword
+    test: ($) =>
+      seq(
+        optional("pub"),
+        "test",
+        optional($.identifier),
+        $.function_arguments,
+        optional(seq("->", $.type_definition)),
+        block(repeat($.expression))
+      ),
 
     // Functions
     function: ($) =>
@@ -86,30 +110,38 @@ module.exports = grammar({
         "fn",
         optional($.identifier),
         $.function_arguments,
-        optional(seq("->", $.type_definition)),
+        optional(seq("->", choice($.type_definition, $.identifier, $.function_type))),
         block(repeat($.expression))
       ),
 
     function_arguments: ($) =>
       seq("(", optional(repeat_separated_by($.function_argument, ",")), ")"),
     function_argument: ($) =>
-      seq($.identifier, optional(seq(":", $.type_definition))),
+      seq(choice($.identifier, $.type_definition), optional(seq(":", choice($.identifier, $.type_definition, $.function_type)))),
+    
+    function_type: ($) =>
+      seq(
+        "fn",
+        $.function_arguments,
+        "->",
+        choice($.type_definition, $.identifier)
+      ),
 
-    // Expressions - WIP
     expression: ($) =>
       prec.right(
         choice(
           $.any_comment,
           $.identifier,
+          $.match_pattern,
           $.field_access,
           $.int,
           $.string,
-          // $.var, ?
           $.function,
           $.list,
           $.call,
           $.bin_op,
           $.bytes,
+          $.bytearray_literal,
           // $.curvepoint - Add this later.
           $.pipeline,
           $.assignment,
@@ -122,7 +154,7 @@ module.exports = grammar({
           $.pair,
           $.error_term,
           $.record_update,
-          // $.unary_op,
+          $.unary_op,
           $.logical_op_chain
         )
       ),
@@ -147,11 +179,17 @@ module.exports = grammar({
         "if",
         $.expression,
         block(repeat($.expression)),
-        optional(seq("else", block(repeat($.expression))))
+        optional(seq("else", choice($.if, block(repeat($.expression))))),
       ),
     when: ($) => seq("when", $.expression, "is", block(repeat1($.when_case))),
     when_case: ($) =>
-      prec.right(seq($.match_pattern, "->", repeat($.expression))),
+      prec.right(
+        seq(
+          choice($.match_pattern, $.list, $.tuple, $.pair, $.discard),
+          "->",
+          $.expression
+        )
+      ),
 
     logical_op_chain: ($) => choice($.and_chain, $.or_chain),
     and_chain: ($) => seq("and", block(repeat_separated_by($.expression, ","))),
@@ -159,6 +197,8 @@ module.exports = grammar({
 
     todo: (_$) => "todo",
 
+    unary_op: ($) => prec.right(seq($.unary_operator, $.expression)),
+    unary_operator: ($) => choice("!"), // Should '-' be here?
     bin_op: ($) =>
       prec.right(seq($.expression, $.binary_operator, $.expression)),
     binary_operator: ($) =>
@@ -186,11 +226,18 @@ module.exports = grammar({
           $.identifier,
           optional(seq(":", $.type_definition)),
           "=",
-          choice($.expression, $.match_pattern)
+          $.expression
         )
       ),
     expect_assignment: ($) =>
-      prec.right(seq("expect", $.match_pattern, "=", $.expression)),
+      prec.right(
+        seq(
+          "expect",
+          choice($.match_pattern, $.list, $.tuple, $.pair, $.identifier),
+          "=",
+          $.expression
+        )
+      ),
 
     // Patterns for case and expect
     match_pattern: ($) =>
@@ -203,9 +250,21 @@ module.exports = grammar({
         )
       ),
     match_pattern_argument: ($) =>
-      choice($.match_pattern, $.identifier, $.discard),
+      choice($.match_pattern, $.identifier, $.discard, $.tuple, $.list),
 
-    list: ($) => seq("[", repeat_separated_by($.expression, ","), "]"),
+    list: ($) =>
+      choice(
+        "[]",
+        seq("[", repeat_separated_by($.expression, ","), "]"),
+        seq(
+          "[",
+          repeat_separated_by($.expression, ","),
+          "..",
+          $.identifier,
+          "]"
+        )
+      ),
+
     call: ($) => seq(choice($.identifier, $.field_access), $.call_arguments),
     call_arguments: ($) =>
       seq("(", optional(repeat_separated_by($.expression, ",")), ")"),
@@ -242,7 +301,8 @@ module.exports = grammar({
 
     string: ($) => seq("@", $.string_inner),
     bytes: ($) => seq(optional("#"), $.string_inner),
-    string_inner: ($) => seq('"', repeat(choice(/[^\\"]/, $.escape)), '"'),
+    bytearray_literal: ($) => seq('#', $.list),
+    string_inner: ($) => prec.right(seq('"', repeat(choice(/[^\\"]/, $.escape)), '"')),
     escape: (_$) => token(/\\./),
 
     //  Comments
