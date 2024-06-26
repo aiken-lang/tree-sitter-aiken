@@ -1166,7 +1166,7 @@
     "fields": {},
     "children": {
       "multiple": true,
-      "required": true,
+      "required": false,
       "types": [
         {
           "type": "expression",
@@ -1174,14 +1174,6 @@
         },
         {
           "type": "function_arguments",
-          "named": true
-        },
-        {
-          "type": "identifier",
-          "named": true
-        },
-        {
-          "type": "type_definition",
           "named": true
         }
       ]

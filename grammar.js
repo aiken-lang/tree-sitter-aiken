@@ -81,14 +81,12 @@ module.exports = grammar({
     type_argument: ($) =>
       field("type_argument", choice($.identifier, $.type_definition, $.tuple)),
 
-    // Validators are basically functions with the 'validator' keyword
     validator: ($) =>
       seq(
-        optional("pub"),
         "validator",
-        optional($.identifier),
-        $.function_arguments,
-        optional(seq("->", $.type_definition)),
+        // optional($.identifier),
+        optional($.function_arguments),
+        // optional(seq("->", $.type_definition)),
         block(repeat($.expression))
       ),
     

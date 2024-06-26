@@ -88,7 +88,7 @@ fn sequence () {
   ))
 
 ================================================================================
-Basic Function Test - Sequence with `..` access
+Basic Function Test - Sequence with `..` list in pattern
 ================================================================================
 
 pub fn choice(self: List<Option<a>>) -> Option<a> {
@@ -127,8 +127,9 @@ pub fn choice(self: List<Option<a>>) -> Option<a> {
               (identifier))
             (when_case
               (list)
-              (match_pattern
-                (type_identifier)))
+              (expression
+                (match_pattern
+                  (type_identifier))))
             (when_case
               (list
                 (expression
