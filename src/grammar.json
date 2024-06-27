@@ -982,6 +982,10 @@
           },
           {
             "type": "SYMBOL",
+            "name": "bool"
+          },
+          {
+            "type": "SYMBOL",
             "name": "function"
           },
           {
@@ -1046,11 +1050,11 @@
           },
           {
             "type": "SYMBOL",
-            "name": "record_update"
+            "name": "unary_op"
           },
           {
             "type": "SYMBOL",
-            "name": "unary_op"
+            "name": "unary_expect"
           },
           {
             "type": "SYMBOL",
@@ -1058,89 +1062,6 @@
           }
         ]
       }
-    },
-    "record_update": {
-      "type": "SEQ",
-      "members": [
-        {
-          "type": "SYMBOL",
-          "name": "type_identifier"
-        },
-        {
-          "type": "STRING",
-          "value": "{"
-        },
-        {
-          "type": "STRING",
-          "value": ".."
-        },
-        {
-          "type": "SYMBOL",
-          "name": "identifier"
-        },
-        {
-          "type": "STRING",
-          "value": ","
-        },
-        {
-          "type": "SEQ",
-          "members": [
-            {
-              "type": "SYMBOL",
-              "name": "record_update_field"
-            },
-            {
-              "type": "REPEAT",
-              "content": {
-                "type": "SEQ",
-                "members": [
-                  {
-                    "type": "STRING",
-                    "value": ","
-                  },
-                  {
-                    "type": "SYMBOL",
-                    "name": "record_update_field"
-                  }
-                ]
-              }
-            },
-            {
-              "type": "CHOICE",
-              "members": [
-                {
-                  "type": "STRING",
-                  "value": ","
-                },
-                {
-                  "type": "BLANK"
-                }
-              ]
-            }
-          ]
-        },
-        {
-          "type": "STRING",
-          "value": "}"
-        }
-      ]
-    },
-    "record_update_field": {
-      "type": "SEQ",
-      "members": [
-        {
-          "type": "SYMBOL",
-          "name": "identifier"
-        },
-        {
-          "type": "STRING",
-          "value": ":"
-        },
-        {
-          "type": "SYMBOL",
-          "name": "expression"
-        }
-      ]
     },
     "error_term": {
       "type": "PREC_RIGHT",
@@ -1398,8 +1319,33 @@
             "value": "->"
           },
           {
-            "type": "SYMBOL",
-            "name": "expression"
+            "type": "CHOICE",
+            "members": [
+              {
+                "type": "SYMBOL",
+                "name": "expression"
+              },
+              {
+                "type": "SEQ",
+                "members": [
+                  {
+                    "type": "STRING",
+                    "value": "{"
+                  },
+                  {
+                    "type": "REPEAT",
+                    "content": {
+                      "type": "SYMBOL",
+                      "name": "expression"
+                    }
+                  },
+                  {
+                    "type": "STRING",
+                    "value": "}"
+                  }
+                ]
+              }
+            ]
           }
         ]
       }
@@ -1643,6 +1589,23 @@
         }
       ]
     },
+    "unary_expect": {
+      "type": "PREC_RIGHT",
+      "value": 0,
+      "content": {
+        "type": "SEQ",
+        "members": [
+          {
+            "type": "STRING",
+            "value": "expect"
+          },
+          {
+            "type": "SYMBOL",
+            "name": "expression"
+          }
+        ]
+      }
+    },
     "assignment": {
       "type": "CHOICE",
       "members": [
@@ -1821,11 +1784,11 @@
               "members": [
                 {
                   "type": "SYMBOL",
-                  "name": "type_definition"
+                  "name": "identifier"
                 },
                 {
                   "type": "SYMBOL",
-                  "name": "identifier"
+                  "name": "match_pattern"
                 }
               ]
             }
@@ -2134,8 +2097,16 @@
               "value": ".."
             },
             {
-              "type": "SYMBOL",
-              "name": "identifier"
+              "type": "CHOICE",
+              "members": [
+                {
+                  "type": "SYMBOL",
+                  "name": "identifier"
+                },
+                {
+                  "type": "BLANK"
+                }
+              ]
             },
             {
               "type": "STRING",
@@ -2306,8 +2277,25 @@
                   "value": ":"
                 },
                 {
-                  "type": "SYMBOL",
-                  "name": "type_definition"
+                  "type": "CHOICE",
+                  "members": [
+                    {
+                      "type": "SYMBOL",
+                      "name": "type_definition"
+                    },
+                    {
+                      "type": "SYMBOL",
+                      "name": "tuple"
+                    },
+                    {
+                      "type": "SYMBOL",
+                      "name": "pair"
+                    },
+                    {
+                      "type": "SYMBOL",
+                      "name": "list"
+                    }
+                  ]
                 }
               ]
             },
@@ -2340,6 +2328,22 @@
         {
           "type": "SYMBOL",
           "name": "bytes"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "bool"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "list"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "tuple"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "pair"
         }
       ]
     },
@@ -2408,6 +2412,19 @@
         {
           "type": "SYMBOL",
           "name": "base16"
+        }
+      ]
+    },
+    "bool": {
+      "type": "CHOICE",
+      "members": [
+        {
+          "type": "STRING",
+          "value": "True"
+        },
+        {
+          "type": "STRING",
+          "value": "False"
         }
       ]
     },
