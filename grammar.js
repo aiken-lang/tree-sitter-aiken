@@ -141,6 +141,7 @@ module.exports = grammar({
           $.field_access,
           $.int,
           $.string,
+          $.bool,
           $.function,
           $.list,
           $.call,
@@ -158,22 +159,11 @@ module.exports = grammar({
           $.tuple,
           $.pair,
           $.error_term,
-          $.record_update,
           $.unary_op,
+          $.unary_expect,
           $.logical_op_chain
         )
       ),
-    record_update: ($) =>
-      seq(
-        $.type_identifier,
-        "{",
-        "..",
-        $.identifier,
-        ",",
-        repeat_separated_by($.record_update_field, ","),
-        "}"
-      ),
-    record_update_field: ($) => seq($.identifier, ":", $.expression),
 
     error_term: ($) => prec.right(seq("fail", optional($.string))),
     tuple: ($) => seq("(", repeat_separated_by($.expression, ","), ")"),
@@ -192,7 +182,7 @@ module.exports = grammar({
         seq(
           choice($.match_pattern, $.list, $.tuple, $.pair, $.discard),
           "->",
-          $.expression
+          choice($.expression, block(repeat($.expression)))
         )
       ),
 
@@ -223,6 +213,7 @@ module.exports = grammar({
         "||"
       ),
 
+    unary_expect: ($) => prec.right(seq("expect", $.expression)),
     assignment: ($) => choice($.let_assignment, $.expect_assignment),
     let_assignment: ($) =>
       prec.right(
@@ -261,7 +252,7 @@ module.exports = grammar({
     field_capture_element: ($) =>
       choice(
         $.identifier,
-        seq($.identifier, ":", choice($.type_definition, $.identifier))
+        seq($.identifier, ":", choice($.identifier, $.match_pattern))
       ),
 
     // Patterns for case and expect
@@ -304,7 +295,7 @@ module.exports = grammar({
           "[",
           repeat_separated_by($.expression, ","),
           "..",
-          $.identifier,
+          optional($.identifier),
           "]"
         )
       ),
@@ -322,15 +313,19 @@ module.exports = grammar({
         optional("pub"),
         "const",
         $.identifier,
-        optional(seq(":", $.type_definition)),
+        optional(seq(":", choice($.type_definition, $.tuple, $.pair, $.list))),
         "=",
         $.constant_value
       ),
-    constant_value: ($) =>
+    constant_value: ($) => //$.expression,
       choice(
         $.int,
         $.string,
-        $.bytes
+        $.bytes,
+        $.bool,
+        $.list,
+        $.tuple,
+        $.pair,
         // $.curvepoint - Add this later.
       ),
 
@@ -342,6 +337,8 @@ module.exports = grammar({
     base10_underscore: (_$) => token(/[0-9]+(_[0-9]+)+/),
     base16: (_$) => token(/0x[0-9a-fA-F]+/),
     int: ($) => choice($.base10, $.base10_underscore, $.base16),
+
+    bool: (_$) => choice("True", "False"),
 
     string: ($) => seq("@", $.string_inner),
     bytes: ($) => seq(optional("#"), $.string_inner),
