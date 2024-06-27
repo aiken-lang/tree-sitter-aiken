@@ -47,11 +47,11 @@ module.exports = grammar({
       ),
 
     // Handles type aliasing definitions
-    type_alias: ($) => seq("type", $.type_definition, "=", $.type_definition),
+    type_alias: ($) => seq(optional("pub"), "type", $.type_definition, "=", $.type_definition),
 
     // Handle enum type definitions
     type_enum: ($) =>
-      seq("type", $.type_definition, block(repeat1($.type_enum_variant))),
+      seq(optional("pub"), "type", $.type_definition, block(repeat1($.type_enum_variant))),
     type_enum_variant: ($) =>
       choice(
         // Foo
@@ -67,7 +67,7 @@ module.exports = grammar({
       ),
 
     // Handle struct type definitions (syntax sugar for enumerations with only one element)
-    type_struct: ($) => seq("type", $.type_struct_inner),
+    type_struct: ($) => seq(optional("pub"), "type", $.type_struct_inner),
     type_struct_inner: ($) =>
       seq($.type_definition, block($.type_struct_fields)),
     type_struct_fields: ($) => repeat1($.type_struct_field),
@@ -364,7 +364,7 @@ module.exports = grammar({
 
     _discard_name: (_$) => /_[_0-9a-z]*/,
     _name: (_$) => /[_a-z][_0-9a-z]*/,
-    _upname: (_$) => /[A-Z][0-9a-zA-Z]*/,
+    _upname: (_$) => /[A-Z][_0-9a-zA-Z]*/,
   },
 });
 
