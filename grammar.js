@@ -317,7 +317,9 @@ module.exports = grammar({
         "=",
         $.constant_value
       ),
-    constant_value: ($) => //$.expression,
+    constant_value: (
+      $ //$.expression,
+    ) =>
       choice(
         $.int,
         $.string,
@@ -325,7 +327,7 @@ module.exports = grammar({
         $.bool,
         $.list,
         $.tuple,
-        $.pair,
+        $.pair
         // $.curvepoint - Add this later.
       ),
 
