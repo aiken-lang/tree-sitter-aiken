@@ -139,7 +139,7 @@
     }
   },
   {
-    "type": "call_arguments",
+    "type": "call_argument",
     "named": true,
     "fields": {},
     "children": {
@@ -148,6 +148,25 @@
       "types": [
         {
           "type": "expression",
+          "named": true
+        },
+        {
+          "type": "identifier",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "call_arguments",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": false,
+      "types": [
+        {
+          "type": "call_argument",
           "named": true
         }
       ]
@@ -295,7 +314,7 @@
     "named": true,
     "fields": {},
     "children": {
-      "multiple": false,
+      "multiple": true,
       "required": true,
       "types": [
         {
@@ -328,6 +347,10 @@
         },
         {
           "type": "error_term",
+          "named": true
+        },
+        {
+          "type": "expression",
           "named": true
         },
         {
@@ -418,6 +441,10 @@
           "named": true
         },
         {
+          "type": "field_identifier",
+          "named": true
+        },
+        {
           "type": "identifier",
           "named": true
         }
@@ -433,15 +460,20 @@
       "required": true,
       "types": [
         {
-          "type": "identifier",
+          "type": "expression",
           "named": true
         },
         {
-          "type": "match_pattern",
+          "type": "identifier",
           "named": true
         }
       ]
     }
+  },
+  {
+    "type": "field_identifier",
+    "named": true,
+    "fields": {}
   },
   {
     "type": "function",
@@ -482,6 +514,10 @@
       "multiple": true,
       "required": true,
       "types": [
+        {
+          "type": "expression",
+          "named": true
+        },
         {
           "type": "function_type",
           "named": true
@@ -670,11 +706,11 @@
       "required": false,
       "types": [
         {
-          "type": "expression",
+          "type": "discard",
           "named": true
         },
         {
-          "type": "identifier",
+          "type": "expression",
           "named": true
         }
       ]
@@ -735,19 +771,7 @@
           "named": true
         },
         {
-          "type": "identifier",
-          "named": true
-        },
-        {
-          "type": "list",
-          "named": true
-        },
-        {
-          "type": "match_pattern",
-          "named": true
-        },
-        {
-          "type": "tuple",
+          "type": "expression",
           "named": true
         }
       ]
@@ -956,6 +980,10 @@
         {
           "type": "expression",
           "named": true
+        },
+        {
+          "type": "type_definition",
+          "named": true
         }
       ]
     }
@@ -1026,6 +1054,10 @@
       "multiple": true,
       "required": true,
       "types": [
+        {
+          "type": "any_comment",
+          "named": true
+        },
         {
           "type": "type_definition",
           "named": true
@@ -1278,22 +1310,6 @@
         {
           "type": "expression",
           "named": true
-        },
-        {
-          "type": "list",
-          "named": true
-        },
-        {
-          "type": "match_pattern",
-          "named": true
-        },
-        {
-          "type": "pair",
-          "named": true
-        },
-        {
-          "type": "tuple",
-          "named": true
         }
       ]
     }
@@ -1431,6 +1447,10 @@
     "named": false
   },
   {
+    "type": "as ",
+    "named": false
+  },
+  {
     "type": "base10",
     "named": true
   },
@@ -1489,6 +1509,10 @@
   {
     "type": "module_comment",
     "named": true
+  },
+  {
+    "type": "opaque",
+    "named": false
   },
   {
     "type": "or",

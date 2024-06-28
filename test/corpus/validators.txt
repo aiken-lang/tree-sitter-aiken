@@ -41,69 +41,76 @@ validator {
                 (type_identifier))))
           (expression
             (any_comment
-              (comment)))
-          (expression
-            (any_comment
-              (comment)))
-          (expression
-            (when
+              (comment))
+            (expression
+              (any_comment
+                (comment))
               (expression
-                (field_access
-                  (identifier)
-                  (identifier)))
-              (when_case
-                (match_pattern
-                  (type_identifier)
-                  (match_pattern_argument
-                    (discard)))
-                (expression
-                  (logical_op_chain
-                    (or_chain
-                      (expression
-                        (call
-                          (identifier)
-                          (call_arguments
-                            (expression
-                              (field_access
-                                (identifier)
-                                (identifier)))
-                            (expression
-                              (field_access
-                                (identifier)
-                                (identifier))))))
-                      (expression
-                        (logical_op_chain
-                          (and_chain
-                            (expression
-                              (call
-                                (identifier)
-                                (call_arguments
+                (when
+                  (expression
+                    (field_access
+                      (identifier)
+                      (field_identifier)))
+                  (when_case
+                    (expression
+                      (match_pattern
+                        (type_identifier)
+                        (match_pattern_argument
+                          (discard))))
+                    (expression
+                      (logical_op_chain
+                        (or_chain
+                          (expression
+                            (call
+                              (identifier)
+                              (call_arguments
+                                (call_argument
                                   (expression
                                     (field_access
                                       (identifier)
-                                      (identifier)))
+                                      (field_identifier))))
+                                (call_argument
                                   (expression
                                     (field_access
                                       (identifier)
-                                      (identifier))))))
-                            (expression
-                              (call
-                                (identifier)
-                                (call_arguments
-                                  (expression
-                                    (field_access
-                                      (identifier)
-                                      (field_access
-                                        (identifier)
-                                        (identifier))))
-                                  (expression
-                                    (field_access
-                                      (identifier)
-                                      (identifier)))))))))))))
-              (when_case
-                (discard)
-                (expression
-                  (bool))))))))
+                                      (field_identifier)))))))
+                          (expression
+                            (logical_op_chain
+                              (and_chain
+                                (expression
+                                  (call
+                                    (identifier)
+                                    (call_arguments
+                                      (call_argument
+                                        (expression
+                                          (field_access
+                                            (identifier)
+                                            (field_identifier))))
+                                      (call_argument
+                                        (expression
+                                          (field_access
+                                            (identifier)
+                                            (field_identifier)))))))
+                                (expression
+                                  (call
+                                    (identifier)
+                                    (call_arguments
+                                      (call_argument
+                                        (expression
+                                          (field_access
+                                            (identifier)
+                                            (field_identifier))))
+                                      (ERROR
+                                        (UNEXPECTED 'i'))
+                                      (call_argument
+                                        (expression
+                                          (field_access
+                                            (identifier)
+                                            (field_identifier))))))))))))))
+                  (when_case
+                    (discard)
+                    (expression
+                      (bool))))))))))
 
 ================================================================================
 Minting Validator from https://github.com/keyan-m/cardano-recorded-mint/blob/main/validators/cardano-recorded-mint.ak
@@ -309,7 +316,8 @@ validator(utxo_ref: OutputReference) {
                   (type_identifier)
                   (field_capture_element
                     (identifier)
-                    (identifier))
+                    (expression
+                      (identifier)))
                   (field_capture_element
                     (identifier)))
                 (expression
@@ -320,7 +328,8 @@ validator(utxo_ref: OutputReference) {
                 (match_pattern
                   (type_identifier)
                   (match_pattern_argument
-                    (identifier)))
+                    (expression
+                      (identifier))))
                 (expression
                   (identifier)))))
           (expression
@@ -351,11 +360,11 @@ validator(utxo_ref: OutputReference) {
                         (expression
                           (field_access
                             (identifier)
-                            (identifier)))))
+                            (field_identifier)))))
                     (expression
                       (field_access
                         (identifier)
-                        (identifier))))))))
+                        (field_identifier))))))))
           (expression
             (assignment
               (let_assignment
@@ -386,54 +395,57 @@ validator(utxo_ref: OutputReference) {
               (expression
                 (identifier))
               (when_case
-                (match_pattern
-                  (type_identifier))
+                (expression
+                  (match_pattern
+                    (type_identifier)))
                 (expression
                   (any_comment
-                    (comment)))
-                (expression
-                  (unary_expect
-                    (expression
-                      (trace_if_false
-                        (expression
-                          (call
-                            (field_access
-                              (identifier)
-                              (identifier))
-                            (call_arguments
-                              (expression
-                                (identifier))
-                              (expression
-                                (function
-                                  (function_arguments
-                                    (function_argument
-                                      (identifier)))
+                    (comment))
+                  (expression
+                    (unary_expect
+                      (expression
+                        (trace_if_false
+                          (expression
+                            (call
+                              (field_access
+                                (identifier)
+                                (field_identifier))
+                              (call_arguments
+                                (call_argument
                                   (expression
-                                    (bin_op
-                                      (expression
-                                        (field_access
-                                          (identifier)
+                                    (identifier)))
+                                (call_argument
+                                  (expression
+                                    (function
+                                      (function_arguments
+                                        (function_argument
                                           (identifier)))
-                                      (binary_operator)
                                       (expression
-                                        (identifier)))))))))))))
+                                        (bin_op
+                                          (expression
+                                            (field_access
+                                              (identifier)
+                                              (field_identifier)))
+                                          (binary_operator)
+                                          (expression
+                                            (identifier)))))))))))))))
                 (expression
                   (any_comment
-                    (comment)))
-                (expression
-                  (unary_expect
-                    (expression
-                      (trace_if_false
-                        (expression
-                          (tuple
-                            (expression
-                              (bin_op
-                                (expression
-                                  (identifier))
-                                (binary_operator)
-                                (expression
-                                  (bytes
-                                    (string_inner)))))))))))
+                    (comment))
+                  (expression
+                    (unary_expect
+                      (expression
+                        (trace_if_false
+                          (expression
+                            (tuple
+                              (expression
+                                (bin_op
+                                  (expression
+                                    (identifier))
+                                  (binary_operator)
+                                  (expression
+                                    (bytes
+                                      (string_inner))))))))))))
                 (expression
                   (unary_expect
                     (expression
@@ -450,130 +462,149 @@ validator(utxo_ref: OutputReference) {
                                     (base10)))))))))))
                 (expression
                   (any_comment
-                    (comment)))
-                (expression
-                  (assignment
-                    (expect_assignment
-                      (list
-                        (expression
-                          (match_pattern
-                            (type_identifier)
-                            (field_capture_element
-                              (identifier)
-                              (match_pattern
-                                (type_identifier)
-                                (match_pattern_argument
-                                  (identifier))))
-                            (field_capture_element
-                              (identifier)
-                              (identifier)))))
-                      (expression
-                        (call
-                          (field_access
-                            (identifier)
-                            (identifier))
-                          (call_arguments
-                            (expression
-                              (identifier))
-                            (expression
-                              (function
-                                (function_arguments
-                                  (function_argument
-                                    (identifier)))
+                    (comment))
+                  (expression
+                    (assignment
+                      (expect_assignment
+                        (list
+                          (expression
+                            (match_pattern
+                              (type_identifier)
+                              (field_capture_element
+                                (identifier)
                                 (expression
-                                  (bin_op
+                                  (match_pattern
+                                    (type_identifier)
+                                    (match_pattern_argument
+                                      (expression
+                                        (identifier))))))
+                              (field_capture_element
+                                (identifier)
+                                (expression
+                                  (identifier))))))
+                        (expression
+                          (call
+                            (field_access
+                              (identifier)
+                              (field_identifier))
+                            (call_arguments
+                              (call_argument
+                                (expression
+                                  (identifier)))
+                              (call_argument
+                                (expression
+                                  (function
+                                    (function_arguments
+                                      (function_argument
+                                        (identifier)))
                                     (expression
                                       (field_access
                                         (identifier)
-                                        (field_access
-                                          (identifier)
-                                          (identifier))))
-                                    (binary_operator)
+                                        (field_identifier)))
                                     (expression
-                                      (match_pattern
-                                        (type_identifier)
-                                        (match_pattern_argument
-                                          (identifier))))))))))))))
-                (expression
-                  (any_comment
-                    (comment)))
-                (expression
-                  (assignment
-                    (expect_assignment
-                      (match_pattern
-                        (type_identifier))
-                      (type_definition
-                        (type_identifier))
-                      (expression
-                        (identifier)))))
-                (expression
-                  (any_comment
-                    (comment)))
-                (expression
-                  (assignment
-                    (let_assignment
-                      (identifier)
-                      (expression
-                        (call
-                          (identifier)
-                          (call_arguments
-                            (expression
-                              (identifier))))))))
-                (expression
-                  (any_comment
-                    (comment)))
-                (expression
-                  (trace_if_false
-                    (expression
-                      (tuple
-                        (expression
-                          (bin_op
-                            (expression
-                              (identifier))
-                            (binary_operator)
-                            (expression
-                              (identifier)))))))))
-              (when_case
-                (match_pattern
-                  (type_identifier))
-                (expression
-                  (any_comment
-                    (comment)))
-                (expression
-                  (assignment
-                    (expect_assignment
-                      (list
-                        (expression
-                          (identifier)))
-                      (expression
-                        (call
-                          (field_access
-                            (identifier)
-                            (identifier))
-                          (call_arguments
-                            (expression
-                              (identifier))
-                            (expression
-                              (function
-                                (function_arguments
-                                  (function_argument
-                                    (identifier)))
-                                (expression
-                                  (bin_op
-                                    (expression
-                                      (field_access
-                                        (identifier)
-                                        (field_access
-                                          (identifier)
+                                      (bin_op
+                                        (expression
                                           (field_access
-                                            (identifier)
-                                            (identifier)))))
-                                    (binary_operator)
+                                            (identifier
+                                              (MISSING _name))
+                                            (field_identifier)))
+                                        (binary_operator)
+                                        (expression
+                                          (match_pattern
+                                            (type_identifier)
+                                            (match_pattern_argument
+                                              (expression
+                                                (identifier)))))))))))))))))
+                (expression
+                  (any_comment
+                    (comment))
+                  (expression
+                    (assignment
+                      (expect_assignment
+                        (match_pattern
+                          (type_identifier))
+                        (type_definition
+                          (type_identifier))
+                        (expression
+                          (identifier))))))
+                (expression
+                  (any_comment
+                    (comment))
+                  (expression
+                    (assignment
+                      (let_assignment
+                        (identifier)
+                        (expression
+                          (call
+                            (identifier)
+                            (call_arguments
+                              (call_argument
+                                (expression
+                                  (identifier))))))))))
+                (expression
+                  (any_comment
+                    (comment))
+                  (expression
+                    (trace_if_false
+                      (expression
+                        (tuple
+                          (expression
+                            (bin_op
+                              (expression
+                                (identifier))
+                              (binary_operator)
+                              (expression
+                                (identifier))))))))))
+              (when_case
+                (expression
+                  (match_pattern
+                    (type_identifier)))
+                (expression
+                  (any_comment
+                    (comment))
+                  (expression
+                    (assignment
+                      (expect_assignment
+                        (list
+                          (discard))
+                        (expression
+                          (call
+                            (field_access
+                              (identifier)
+                              (field_identifier))
+                            (call_arguments
+                              (call_argument
+                                (expression
+                                  (identifier)))
+                              (call_argument
+                                (expression
+                                  (function
+                                    (function_arguments
+                                      (function_argument
+                                        (identifier)))
                                     (expression
-                                      (match_pattern
-                                        (type_identifier)
-                                        (match_pattern_argument
-                                          (identifier))))))))))))))
+                                      (field_access
+                                        (identifier)
+                                        (field_identifier)))
+                                    (expression
+                                      (field_access
+                                        (identifier
+                                          (MISSING _name))
+                                        (field_identifier)))
+                                    (expression
+                                      (bin_op
+                                        (expression
+                                          (field_access
+                                            (identifier
+                                              (MISSING _name))
+                                            (field_identifier)))
+                                        (binary_operator)
+                                        (expression
+                                          (match_pattern
+                                            (type_identifier)
+                                            (match_pattern_argument
+                                              (expression
+                                                (identifier)))))))))))))))))
                 (expression
                   (bool))))))
         (function
@@ -600,13 +631,16 @@ validator(utxo_ref: OutputReference) {
                   (type_identifier)
                   (field_capture_element
                     (identifier)
-                    (identifier))
+                    (expression
+                      (identifier)))
                   (field_capture_element
                     (identifier)
-                    (match_pattern
-                      (type_identifier)
-                      (match_pattern_argument
-                        (identifier)))))
+                    (expression
+                      (match_pattern
+                        (type_identifier)
+                        (match_pattern_argument
+                          (expression
+                            (identifier)))))))
                 (expression
                   (identifier)))))
           (expression
@@ -629,29 +663,34 @@ validator(utxo_ref: OutputReference) {
                   (type_identifier)
                   (field_capture_element
                     (identifier)
-                    (identifier))
+                    (expression
+                      (identifier)))
                   (field_capture_element
                     (identifier)
-                    (identifier)))
+                    (expression
+                      (identifier))))
                 (expression
                   (call
                     (identifier)
                     (call_arguments
-                      (expression
-                        (identifier))
-                      (expression
-                        (identifier))))))))
+                      (call_argument
+                        (expression
+                          (identifier)))
+                      (call_argument
+                        (expression
+                          (identifier)))))))))
           (expression
             (assignment
               (expect_assignment
                 (match_pattern
                   (type_identifier)
                   (match_pattern_argument
-                    (identifier)))
+                    (expression
+                      (identifier))))
                 (expression
                   (field_access
                     (identifier)
-                    (identifier))))))
+                    (field_identifier))))))
           (expression
             (assignment
               (let_assignment
@@ -660,51 +699,54 @@ validator(utxo_ref: OutputReference) {
                   (call
                     (identifier)
                     (call_arguments
-                      (expression
-                        (identifier))))))))
+                      (call_argument
+                        (expression
+                          (identifier)))))))))
           (expression
             (any_comment
-              (comment)))
-          (expression
-            (assignment
-              (let_assignment
-                (tuple
+              (comment))
+            (expression
+              (assignment
+                (let_assignment
+                  (tuple
+                    (expression
+                      (identifier))
+                    (expression
+                      (identifier))
+                    (expression
+                      (identifier)))
                   (expression
-                    (identifier))
-                  (expression
-                    (identifier))
-                  (expression
-                    (identifier)))
-                (expression
-                  (identifier)))))
+                    (identifier))))))
           (expression
             (any_comment
-              (comment)))
-          (expression
-            (any_comment
-              (comment)))
-          (expression
-            (unary_expect
+              (comment))
+            (expression
+              (any_comment
+                (comment))
               (expression
-                (trace_if_false
+                (unary_expect
                   (expression
-                    (tuple
+                    (trace_if_false
                       (expression
-                        (bin_op
+                        (tuple
                           (expression
-                            (call
-                              (field_access
-                                (identifier)
-                                (identifier))
-                              (call_arguments
-                                (expression
-                                  (identifier))
-                                (expression
-                                  (int
-                                    (base10))))))
-                          (binary_operator)
-                          (expression
-                            (identifier))))))))))
+                            (bin_op
+                              (expression
+                                (call
+                                  (field_access
+                                    (identifier)
+                                    (field_identifier))
+                                  (call_arguments
+                                    (call_argument
+                                      (expression
+                                        (identifier)))
+                                    (call_argument
+                                      (expression
+                                        (int
+                                          (base10)))))))
+                              (binary_operator)
+                              (expression
+                                (identifier))))))))))))
           (expression
             (unary_expect
               (expression
@@ -749,279 +791,298 @@ validator(utxo_ref: OutputReference) {
                         (expression
                           (field_access
                             (identifier)
-                            (identifier)))))
+                            (field_identifier)))))
                     (expression
                       (field_access
                         (identifier)
-                        (identifier))))))))
+                        (field_identifier))))))))
           (expression
             (any_comment
-              (comment)))
-          (expression
-            (any_comment
-              (comment)))
-          (expression
-            (assignment
-              (let_assignment
-                (tuple
-                  (expression
-                    (identifier))
-                  (expression
-                    (identifier)))
-                (expression
-                  (call
-                    (identifier)
-                    (call_arguments
+              (comment))
+            (expression
+              (any_comment
+                (comment))
+              (expression
+                (assignment
+                  (let_assignment
+                    (tuple
                       (expression
                         (identifier))
                       (expression
-                        (identifier))))))))
-          (expression
-            (assignment
-              (let_assignment
-                (tuple
-                  (expression
-                    (identifier))
-                  (expression
-                    (identifier))
-                  (expression
-                    (identifier)))
-                (expression
-                  (identifier)))))
-          (expression
-            (assignment
-              (let_assignment
-                (tuple
-                  (expression
-                    (identifier))
-                  (expression
-                    (identifier))
-                  (expression
-                    (identifier)))
-                (expression
-                  (identifier)))))
-          (expression
-            (any_comment
-              (comment)))
-          (expression
-            (unary_expect
-              (expression
-                (trace_if_false
-                  (expression
-                    (tuple
-                      (expression
-                        (bin_op
-                          (expression
-                            (identifier))
-                          (binary_operator)
-                          (expression
-                            (identifier))))))))))
-          (expression
-            (unary_expect
-              (expression
-                (trace_if_false
-                  (expression
-                    (tuple
-                      (expression
-                        (bin_op
-                          (expression
-                            (identifier))
-                          (binary_operator)
-                          (expression
-                            (identifier))))))))))
-          (expression
-            (any_comment
-              (comment)))
-          (expression
-            (any_comment
-              (comment)))
-          (expression
-            (any_comment
-              (comment)))
-          (expression
-            (assignment
-              (let_assignment
-                (identifier)
-                (expression
-                  (call
-                    (field_access
-                      (identifier)
-                      (identifier))
-                    (call_arguments
-                      (expression
-                        (identifier))
-                      (expression
-                        (int
-                          (base10)))))))))
-          (expression
-            (assignment
-              (let_assignment
-                (identifier)
-                (expression
-                  (call
-                    (field_access
-                      (identifier)
-                      (identifier))
-                    (call_arguments
-                      (expression
-                        (identifier))
-                      (expression
-                        (int
-                          (base10)))))))))
-          (expression
-            (unary_expect
-              (expression
-                (trace_if_false
-                  (expression
-                    (tuple
-                      (expression
-                        (bin_op
-                          (expression
-                            (identifier))
-                          (binary_operator)
-                          (expression
-                            (identifier))))))))))
-          (expression
-            (any_comment
-              (comment)))
-          (expression
-            (unary_expect
-              (expression
-                (trace_if_false
-                  (expression
-                    (tuple
-                      (expression
-                        (bin_op
-                          (expression
-                            (identifier))
-                          (binary_operator)
-                          (expression
-                            (int
-                              (base10)))))))))))
-          (expression
-            (unary_expect
-              (expression
-                (trace_if_false
-                  (expression
-                    (tuple
-                      (expression
-                        (bin_op
-                          (expression
-                            (identifier))
-                          (binary_operator)
-                          (expression
-                            (int
-                              (base10)))))))))))
-          (expression
-            (any_comment
-              (comment)))
-          (expression
-            (any_comment
-              (comment)))
-          (expression
-            (unary_expect
-              (expression
-                (trace_if_false
-                  (expression
-                    (tuple
-                      (expression
-                        (bin_op
-                          (expression
-                            (call
-                              (field_access
-                                (identifier)
-                                (identifier))
-                              (call_arguments
-                                (expression
-                                  (identifier))
-                                (expression
-                                  (identifier)))))
-                          (binary_operator)
-                          (expression
-                            (match_pattern
-                              (type_identifier)))))))))))
-          (expression
-            (any_comment
-              (comment)))
-          (expression
-            (any_comment
-              (comment)))
-          (expression
-            (assignment
-              (let_assignment
-                (identifier)
-                (expression
-                  (when
+                        (identifier)))
                     (expression
-                      (identifier))
-                    (when_case
-                      (match_pattern
-                        (type_identifier))
-                      (expression
-                        (bool)))
-                    (when_case
-                      (match_pattern
-                        (type_identifier)
-                        (match_pattern_argument
-                          (identifier)))
-                      (expression
-                        (trace_if_false
-                          (expression
-                            (tuple
-                              (expression
-                                (bin_op
-                                  (expression
-                                    (call
-                                      (field_access
-                                        (identifier)
-                                        (identifier))
-                                      (call_arguments
-                                        (expression
-                                          (identifier))
-                                        (expression
-                                          (identifier)))))
-                                  (binary_operator)
-                                  (expression
-                                    (match_pattern
-                                      (type_identifier)))))))))))))))
-          (expression
-            (any_comment
-              (comment)))
+                      (call
+                        (identifier)
+                        (call_arguments
+                          (call_argument
+                            (expression
+                              (identifier)))
+                          (call_argument
+                            (expression
+                              (identifier)))))))))))
           (expression
             (assignment
-              (expect_assignment
-                (list
+              (let_assignment
+                (tuple
+                  (expression
+                    (identifier))
                   (expression
                     (identifier))
                   (expression
                     (identifier)))
                 (expression
+                  (identifier)))))
+          (expression
+            (assignment
+              (let_assignment
+                (tuple
+                  (expression
+                    (identifier))
+                  (expression
+                    (identifier))
+                  (expression
+                    (identifier)))
+                (expression
+                  (identifier)))))
+          (expression
+            (any_comment
+              (comment))
+            (expression
+              (unary_expect
+                (expression
+                  (trace_if_false
+                    (expression
+                      (tuple
+                        (expression
+                          (bin_op
+                            (expression
+                              (identifier))
+                            (binary_operator)
+                            (expression
+                              (identifier)))))))))))
+          (expression
+            (unary_expect
+              (expression
+                (trace_if_false
+                  (expression
+                    (tuple
+                      (expression
+                        (bin_op
+                          (expression
+                            (identifier))
+                          (binary_operator)
+                          (expression
+                            (identifier))))))))))
+          (expression
+            (any_comment
+              (comment))
+            (expression
+              (any_comment
+                (comment))
+              (expression
+                (any_comment
+                  (comment))
+                (expression
+                  (assignment
+                    (let_assignment
+                      (identifier)
+                      (expression
+                        (call
+                          (field_access
+                            (identifier)
+                            (field_identifier))
+                          (call_arguments
+                            (call_argument
+                              (expression
+                                (identifier)))
+                            (call_argument
+                              (expression
+                                (int
+                                  (base10)))))))))))))
+          (expression
+            (assignment
+              (let_assignment
+                (identifier)
+                (expression
                   (call
                     (field_access
                       (identifier)
-                      (identifier))
+                      (field_identifier))
                     (call_arguments
+                      (call_argument
+                        (expression
+                          (identifier)))
+                      (call_argument
+                        (expression
+                          (int
+                            (base10))))))))))
+          (expression
+            (unary_expect
+              (expression
+                (trace_if_false
+                  (expression
+                    (tuple
                       (expression
-                        (identifier))
+                        (bin_op
+                          (expression
+                            (identifier))
+                          (binary_operator)
+                          (expression
+                            (identifier))))))))))
+          (expression
+            (any_comment
+              (comment))
+            (expression
+              (unary_expect
+                (expression
+                  (trace_if_false
+                    (expression
+                      (tuple
+                        (expression
+                          (bin_op
+                            (expression
+                              (identifier))
+                            (binary_operator)
+                            (expression
+                              (int
+                                (base10))))))))))))
+          (expression
+            (unary_expect
+              (expression
+                (trace_if_false
+                  (expression
+                    (tuple
                       (expression
-                        (function
-                          (function_arguments
-                            (function_argument
-                              (identifier)))
+                        (bin_op
+                          (expression
+                            (identifier))
+                          (binary_operator)
+                          (expression
+                            (int
+                              (base10)))))))))))
+          (expression
+            (any_comment
+              (comment))
+            (expression
+              (any_comment
+                (comment))
+              (expression
+                (unary_expect
+                  (expression
+                    (trace_if_false
+                      (expression
+                        (tuple
                           (expression
                             (bin_op
                               (expression
-                                (field_access
-                                  (identifier)
+                                (call
                                   (field_access
                                     (identifier)
-                                    (identifier))))
+                                    (field_identifier))
+                                  (call_arguments
+                                    (call_argument
+                                      (expression
+                                        (identifier)))
+                                    (call_argument
+                                      (expression
+                                        (identifier))))))
                               (binary_operator)
                               (expression
                                 (match_pattern
-                                  (type_identifier)
-                                  (match_pattern_argument
-                                    (identifier))))))))))))))
+                                  (type_identifier)))))))))))))
+          (expression
+            (any_comment
+              (comment))
+            (expression
+              (any_comment
+                (comment))
+              (expression
+                (assignment
+                  (let_assignment
+                    (identifier)
+                    (expression
+                      (when
+                        (expression
+                          (identifier))
+                        (when_case
+                          (expression
+                            (match_pattern
+                              (type_identifier)))
+                          (expression
+                            (bool)))
+                        (when_case
+                          (expression
+                            (match_pattern
+                              (type_identifier)
+                              (match_pattern_argument
+                                (expression
+                                  (identifier)))))
+                          (expression
+                            (trace_if_false
+                              (expression
+                                (tuple
+                                  (expression
+                                    (bin_op
+                                      (expression
+                                        (call
+                                          (field_access
+                                            (identifier)
+                                            (field_identifier))
+                                          (call_arguments
+                                            (call_argument
+                                              (expression
+                                                (identifier)))
+                                            (call_argument
+                                              (expression
+                                                (identifier))))))
+                                      (binary_operator)
+                                      (expression
+                                        (match_pattern
+                                          (type_identifier)))))))))))))))))
+          (expression
+            (any_comment
+              (comment))
+            (expression
+              (assignment
+                (expect_assignment
+                  (list
+                    (expression
+                      (identifier))
+                    (expression
+                      (identifier)))
+                  (expression
+                    (call
+                      (field_access
+                        (identifier)
+                        (field_identifier))
+                      (call_arguments
+                        (call_argument
+                          (expression
+                            (identifier)))
+                        (call_argument
+                          (expression
+                            (function
+                              (function_arguments
+                                (function_argument
+                                  (identifier)))
+                              (expression
+                                (field_access
+                                  (identifier)
+                                  (field_identifier)))
+                              (expression
+                                (bin_op
+                                  (expression
+                                    (field_access
+                                      (identifier
+                                        (MISSING _name))
+                                      (field_identifier)))
+                                  (binary_operator)
+                                  (expression
+                                    (match_pattern
+                                      (type_identifier)
+                                      (match_pattern_argument
+                                        (expression
+                                          (identifier)))))))))))))))))
           (expression
             (assignment
               (expect_assignment
@@ -1029,13 +1090,16 @@ validator(utxo_ref: OutputReference) {
                   (type_identifier)
                   (field_capture_element
                     (identifier)
-                    (match_pattern
-                      (type_identifier)
-                      (match_pattern_argument
-                        (identifier))))
+                    (expression
+                      (match_pattern
+                        (type_identifier)
+                        (match_pattern_argument
+                          (expression
+                            (identifier))))))
                   (field_capture_element
                     (identifier)
-                    (identifier)))
+                    (expression
+                      (identifier))))
                 (expression
                   (identifier)))))
           (expression
@@ -1045,34 +1109,38 @@ validator(utxo_ref: OutputReference) {
                   (type_identifier)
                   (field_capture_element
                     (identifier)
-                    (match_pattern
-                      (type_identifier)
-                      (match_pattern_argument
-                        (identifier))))
+                    (expression
+                      (match_pattern
+                        (type_identifier)
+                        (match_pattern_argument
+                          (expression
+                            (identifier))))))
                   (field_capture_element
                     (identifier)
-                    (identifier)))
+                    (expression
+                      (identifier))))
                 (expression
                   (identifier)))))
           (expression
             (any_comment
-              (comment)))
-          (expression
-            (any_comment
-              (comment)))
-          (expression
-            (any_comment
-              (comment)))
-          (expression
-            (assignment
-              (let_assignment
-                (identifier)
+              (comment))
+            (expression
+              (any_comment
+                (comment))
+              (expression
+                (any_comment
+                  (comment))
                 (expression
-                  (call
-                    (identifier)
-                    (call_arguments
+                  (assignment
+                    (let_assignment
+                      (identifier)
                       (expression
-                        (identifier))))))))
+                        (call
+                          (identifier)
+                          (call_arguments
+                            (call_argument
+                              (expression
+                                (identifier))))))))))))
           (expression
             (unary_expect
               (expression
@@ -1092,7 +1160,8 @@ validator(utxo_ref: OutputReference) {
                 (match_pattern
                   (type_identifier)
                   (match_pattern_argument
-                    (identifier)))
+                    (expression
+                      (identifier))))
                 (type_definition
                   (type_identifier))
                 (expression
@@ -1112,56 +1181,57 @@ validator(utxo_ref: OutputReference) {
                             (identifier))))))))))
           (expression
             (any_comment
-              (comment)))
-          (expression
-            (any_comment
-              (comment)))
-          (expression
-            (any_comment
-              (comment)))
-          (expression
-            (assignment
-              (expect_assignment
-                (identifier)
-                (type_definition
-                  (type_identifier))
-                (expression
-                  (identifier)))))
-          (expression
-            (unary_expect
+              (comment))
+            (expression
+              (any_comment
+                (comment))
               (expression
-                (trace_if_false
-                  (expression
-                    (tuple
-                      (expression
-                        (bin_op
-                          (expression
-                            (identifier))
-                          (binary_operator)
-                          (expression
-                            (identifier))))))))))
-          (expression
-            (any_comment
-              (comment)))
-          (expression
-            (any_comment
-              (comment)))
-          (expression
-            (assignment
-              (let_assignment
-                (tuple
-                  (expression
-                    (identifier))
-                  (expression
-                    (identifier))
-                  (expression
-                    (identifier)))
+                (any_comment
+                  (comment))
                 (expression
-                  (call
-                    (identifier)
-                    (call_arguments
+                  (assignment
+                    (expect_assignment
+                      (identifier)
+                      (type_definition
+                        (type_identifier))
                       (expression
                         (identifier))))))))
+          (expression
+            (unary_expect
+              (expression
+                (trace_if_false
+                  (expression
+                    (tuple
+                      (expression
+                        (bin_op
+                          (expression
+                            (identifier))
+                          (binary_operator)
+                          (expression
+                            (identifier))))))))))
+          (expression
+            (any_comment
+              (comment))
+            (expression
+              (any_comment
+                (comment))
+              (expression
+                (assignment
+                  (let_assignment
+                    (tuple
+                      (expression
+                        (identifier))
+                      (expression
+                        (identifier))
+                      (expression
+                        (identifier)))
+                    (expression
+                      (call
+                        (identifier)
+                        (call_arguments
+                          (call_argument
+                            (expression
+                              (identifier)))))))))))
           (expression
             (unary_expect
               (expression
