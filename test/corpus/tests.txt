@@ -18,26 +18,29 @@ test foldl_1() {
               (call
                 (identifier)
                 (call_arguments
-                  (expression
-                    (bytearray_literal
-                      (list)))
-                  (expression
-                    (int
-                      (base10)))
-                  (expression
-                    (function
-                      (function_arguments
-                        (function_argument
-                          (identifier))
-                        (function_argument
-                          (identifier)))
-                      (expression
-                        (bin_op
-                          (expression
+                  (call_argument
+                    (expression
+                      (bytearray_literal
+                        (list))))
+                  (call_argument
+                    (expression
+                      (int
+                        (base10))))
+                  (call_argument
+                    (expression
+                      (function
+                        (function_arguments
+                          (function_argument
                             (identifier))
-                          (binary_operator)
-                          (expression
-                            (identifier)))))))))
+                          (function_argument
+                            (identifier)))
+                        (expression
+                          (bin_op
+                            (expression
+                              (identifier))
+                            (binary_operator)
+                            (expression
+                              (identifier))))))))))
             (binary_operator)
             (expression
               (int
@@ -63,32 +66,35 @@ test foldl_2() {
               (call
                 (identifier)
                 (call_arguments
-                  (expression
-                    (bytes
-                      (string_inner)))
-                  (expression
-                    (int
-                      (base10)))
-                  (expression
-                    (function
-                      (function_arguments
-                        (function_argument
-                          (identifier))
-                        (function_argument
-                          (identifier)))
-                      (expression
-                        (bin_op
-                          (expression
+                  (call_argument
+                    (expression
+                      (bytes
+                        (string_inner))))
+                  (call_argument
+                    (expression
+                      (int
+                        (base10))))
+                  (call_argument
+                    (expression
+                      (function
+                        (function_arguments
+                          (function_argument
                             (identifier))
-                          (binary_operator)
-                          (expression
-                            (bin_op
-                              (expression
-                                (int
-                                  (base10)))
-                              (binary_operator)
-                              (expression
-                                (identifier)))))))))))
+                          (function_argument
+                            (identifier)))
+                        (expression
+                          (bin_op
+                            (expression
+                              (bin_op
+                                (expression
+                                  (identifier))
+                                (binary_operator)
+                                (expression
+                                  (int
+                                    (base10)))))
+                            (binary_operator)
+                            (expression
+                              (identifier))))))))))
             (binary_operator)
             (expression
               (int
@@ -118,32 +124,35 @@ test foldl_3() {
               (call
                 (identifier)
                 (call_arguments
-                  (expression
-                    (bytes
-                      (string_inner)))
-                  (expression
-                    (int
-                      (base10)))
-                  (expression
-                    (function
-                      (function_arguments
-                        (function_argument
-                          (identifier))
-                        (function_argument
-                          (identifier)))
-                      (expression
-                        (bin_op
-                          (expression
+                  (call_argument
+                    (expression
+                      (bytes
+                        (string_inner))))
+                  (call_argument
+                    (expression
+                      (int
+                        (base10))))
+                  (call_argument
+                    (expression
+                      (function
+                        (function_arguments
+                          (function_argument
                             (identifier))
-                          (binary_operator)
-                          (expression
-                            (bin_op
-                              (expression
-                                (int
-                                  (base10)))
-                              (binary_operator)
-                              (expression
-                                (identifier)))))))))))
+                          (function_argument
+                            (identifier)))
+                        (expression
+                          (bin_op
+                            (expression
+                              (bin_op
+                                (expression
+                                  (identifier))
+                                (binary_operator)
+                                (expression
+                                  (int
+                                    (base10)))))
+                            (binary_operator)
+                            (expression
+                              (identifier))))))))))
             (binary_operator)
             (expression
               (int
@@ -169,33 +178,37 @@ test foldl_4() {
               (call
                 (identifier)
                 (call_arguments
-                  (expression
-                    (bytearray_literal
-                      (list
-                        (expression
-                          (int
-                            (base10)))
-                        (expression
-                          (int
-                            (base10)))
-                        (expression
-                          (int
-                            (base10)))
-                        (expression
-                          (int
-                            (base10)))
-                        (expression
-                          (int
-                            (base10))))))
-                  (expression
-                    (bytes
-                      (string_inner)))
-                  (expression
-                    (call
-                      (identifier)
-                      (call_arguments
-                        (expression
-                          (identifier))))))))
+                  (call_argument
+                    (expression
+                      (bytearray_literal
+                        (list
+                          (expression
+                            (int
+                              (base10)))
+                          (expression
+                            (int
+                              (base10)))
+                          (expression
+                            (int
+                              (base10)))
+                          (expression
+                            (int
+                              (base10)))
+                          (expression
+                            (int
+                              (base10)))))))
+                  (call_argument
+                    (expression
+                      (bytes
+                        (string_inner))))
+                  (call_argument
+                    (expression
+                      (call
+                        (identifier)
+                        (call_arguments
+                          (call_argument
+                            (expression
+                              (identifier))))))))))
             (binary_operator)
             (expression
               (bytearray_literal

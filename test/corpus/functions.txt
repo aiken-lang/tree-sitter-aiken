@@ -48,19 +48,21 @@ fn sequence () {
 --------------------------------------------------------------------------------
 
 (source_file
-  (function
-    (identifier)
-    (function_arguments)
-    (expression
-      (call
+      (function
         (identifier)
-        (call_arguments
-          (expression (call 
+        (function_arguments)
+        (expression
+          (call
             (identifier)
-            (call_arguments (expression (identifier))))))
-      )
-    )
-  ))
+            (call_arguments
+              (call_argument
+                (expression
+                  (call
+                    (identifier)
+                    (call_arguments
+                      (call_argument
+                        (expression
+                          (identifier))))))))))))
 
 ================================================================================
 Basic Function Test - Sequence with `.` access
@@ -73,19 +75,23 @@ fn sequence () {
 --------------------------------------------------------------------------------
 
 (source_file
-  (function
-    (identifier)
-    (function_arguments)
-    (expression
-      (call
-        (field_access (identifier) (identifier))
-        (call_arguments
-          (expression (call 
-            (identifier)
-            (call_arguments (expression (identifier))))))
-      )
-    )
-  ))
+      (function
+        (identifier)
+        (function_arguments)
+        (expression
+          (call
+            (field_access
+              (identifier)
+              (field_identifier))
+            (call_arguments
+              (call_argument
+                (expression
+                  (call
+                    (identifier)
+                    (call_arguments
+                      (call_argument
+                        (expression
+                          (identifier))))))))))))
 
 ================================================================================
 Basic Function Test - Sequence with `..` list in pattern
@@ -113,41 +119,46 @@ pub fn choice(self: List<Option<a>>) -> Option<a> {
             (type_definition
               (type_identifier)
               (type_argument
-                type_argument: (type_definition
+                (type_definition
                   (type_identifier)
                   (type_argument
-                    type_argument: (identifier)))))))
+                    (identifier)))))))
         (type_definition
           (type_identifier)
           (type_argument
-            type_argument: (identifier)))
+            (identifier)))
         (expression
           (when
             (expression
               (identifier))
             (when_case
-              (list)
+              (expression
+                (list))
               (expression
                 (match_pattern
                   (type_identifier))))
             (when_case
-              (list
-                (expression
-                  (identifier))
-                (identifier))
+              (expression
+                (list
+                  (expression
+                    (identifier))
+                  (expression
+                    (identifier))))
               (expression
                 (when
                   (expression
                     (identifier))
                   (when_case
-                    (match_pattern
-                      (type_identifier))
+                    (expression
+                      (match_pattern
+                        (type_identifier)))
                     (expression
                       (call
                         (identifier)
                         (call_arguments
-                          (expression
-                            (identifier))))))
+                          (call_argument
+                            (expression
+                              (identifier)))))))
                   (when_case
                     (discard)
                     (expression
