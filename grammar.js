@@ -15,7 +15,9 @@ module.exports = grammar({
         $.type_struct,
         $.type_enum,
         $.constant,
-        $.function
+        $.function,
+        $.validator,
+        $.test
       ),
 
     // Handles import definitions
@@ -77,7 +79,27 @@ module.exports = grammar({
         optional(seq("<", repeat_separated_by($.type_argument, ","), ">"))
       ),
     type_argument: ($) =>
-      field("type_argument", choice($.identifier, $.type_definition)),
+      field("type_argument", choice($.identifier, $.type_definition, $.tuple)),
+
+    validator: ($) =>
+      seq(
+        "validator",
+        // optional($.identifier),
+        optional($.function_arguments),
+        optional(seq("->", $.type_definition)),
+        block(repeat($.function))
+      ),
+
+    // Tests are basically functions with the 'test' keyword
+    test: ($) =>
+      seq(
+        optional("pub"),
+        "test",
+        optional($.identifier),
+        $.function_arguments,
+        optional(seq("->", $.type_definition)),
+        block(repeat($.expression))
+      ),
 
     // Functions
     function: ($) =>
@@ -86,72 +108,213 @@ module.exports = grammar({
         "fn",
         optional($.identifier),
         $.function_arguments,
-        optional(seq("->", $.type_definition)),
+        optional(
+          seq("->", choice($.type_definition, $.identifier, $.function_type))
+        ),
         block(repeat($.expression))
       ),
 
     function_arguments: ($) =>
       seq("(", optional(repeat_separated_by($.function_argument, ",")), ")"),
     function_argument: ($) =>
-      seq($.identifier, optional(seq(":", $.type_definition))),
+      seq(
+        choice($.identifier, $.type_definition),
+        optional(
+          seq(":", choice($.identifier, $.type_definition, $.function_type))
+        )
+      ),
 
-    // Expressions - WIP
+    function_type: ($) =>
+      seq(
+        "fn",
+        $.function_arguments,
+        "->",
+        choice($.type_definition, $.identifier)
+      ),
+
     expression: ($) =>
-      choice(
+      prec.right(
+        choice(
+          $.any_comment,
+          $.identifier,
+          $.match_pattern,
+          $.field_access,
+          $.int,
+          $.string,
+          $.function,
+          $.list,
+          $.call,
+          $.bin_op,
+          $.bytes,
+          $.bytearray_literal,
+          // $.curvepoint - Add this later.
+          $.pipeline,
+          $.assignment,
+          $.trace,
+          $.trace_if_false,
+          $.todo,
+          $.when,
+          $.if,
+          $.tuple,
+          $.pair,
+          $.error_term,
+          $.record_update,
+          $.unary_op,
+          $.logical_op_chain
+        )
+      ),
+    record_update: ($) =>
+      seq(
+        $.type_identifier,
+        "{",
+        "..",
         $.identifier,
-        $.access,
-        $.int,
-        $.string,
-        // $.var,
-        $.function,
-        $.list,
-        $.call,
-        // $.bin_op,
-        $.bytes,
-        // $.curvepoint - Add this later.
-        // $.pipeline,
-        $.assignment
-        // $.trace,
-        // $.trace_if_false,
-        // $.when,
-        // $.if,
-        // $.field_access,
-        // $.tuple,
-        // $.pair,
-        // $.tuple_index,
-        // $.error_term,
-        // $.record_update,
-        // $.unary_op,
-        // $.logical_op_chain,
+        ",",
+        repeat_separated_by($.record_update_field, ","),
+        "}"
+      ),
+    record_update_field: ($) => seq($.identifier, ":", $.expression),
+
+    error_term: ($) => prec.right(seq("fail", optional($.string))),
+    tuple: ($) => seq("(", repeat_separated_by($.expression, ","), ")"),
+    pair: ($) => seq("Pair", "(", $.expression, ",", $.expression, ")"),
+
+    if: ($) =>
+      seq(
+        "if",
+        $.expression,
+        block(repeat($.expression)),
+        optional(seq("else", choice($.if, block(repeat($.expression)))))
+      ),
+    when: ($) => seq("when", $.expression, "is", block(repeat1($.when_case))),
+    when_case: ($) =>
+      prec.right(
+        seq(
+          choice($.match_pattern, $.list, $.tuple, $.pair, $.discard),
+          "->",
+          $.expression
+        )
+      ),
+
+    logical_op_chain: ($) => choice($.and_chain, $.or_chain),
+    and_chain: ($) => seq("and", block(repeat_separated_by($.expression, ","))),
+    or_chain: ($) => seq("or", block(repeat_separated_by($.expression, ","))),
+
+    todo: (_$) => "todo",
+
+    unary_op: ($) => prec.right(seq($.unary_operator, $.expression)),
+    unary_operator: ($) => choice("!"), // Should '-' be here?
+    bin_op: ($) =>
+      prec.right(seq($.expression, $.binary_operator, $.expression)),
+    binary_operator: ($) =>
+      choice(
+        "+",
+        "-",
+        "*",
+        "/",
+        "%",
+        "==",
+        "!=",
+        "<",
+        "<=",
+        ">",
+        ">=",
+        "&&",
+        "||"
       ),
 
     assignment: ($) => choice($.let_assignment, $.expect_assignment),
     let_assignment: ($) =>
-      seq(
-        "let",
-        $.identifier,
-        optional(seq(":", $.type_definition)),
-        "=",
-        $.expression
+      prec.right(
+        seq(
+          "let",
+          choice(
+            $.match_pattern,
+            $.list,
+            $.tuple,
+            $.pair,
+            $.identifier,
+            $.discard
+          ),
+          optional(seq(":", $.type_definition)),
+          "=",
+          $.expression
+        )
       ),
-    expect_assignment: ($) => seq("expect", $.match_pattern, "=", $.expression),
+    expect_assignment: ($) =>
+      prec.right(
+        seq(
+          "expect",
+          choice(
+            $.match_pattern,
+            $.list,
+            $.tuple,
+            $.pair,
+            $.identifier,
+            $.discard
+          ),
+          optional(seq(":", $.type_definition)),
+          "=",
+          $.expression
+        )
+      ),
+    field_capture_element: ($) =>
+      choice(
+        $.identifier,
+        seq($.identifier, ":", choice($.type_definition, $.identifier))
+      ),
 
     // Patterns for case and expect
     match_pattern: ($) =>
-      seq(
-        $.type_identifier,
-        "(",
-        repeat_separated_by($.match_pattern_argument, ","),
-        ")"
+      prec.right(
+        seq(
+          $.type_identifier,
+          optional(
+            choice(
+              seq(
+                "(",
+                repeat_separated_by(
+                  choice($.match_pattern_argument, ".."),
+                  ","
+                ),
+                ")"
+              ),
+              seq(
+                "{",
+                optional(
+                  repeat_separated_by(
+                    choice($.field_capture_element, ".."),
+                    ","
+                  )
+                ),
+                "}"
+              )
+            )
+          )
+        )
       ),
-    match_pattern_argument: ($) => choice($.identifier, $.discard),
+    match_pattern_argument: ($) =>
+      choice($.match_pattern, $.identifier, $.discard, $.tuple, $.list),
 
-    list: ($) => seq("[", repeat_separated_by($.expression, ","), "]"),
-    call: ($) => seq(choice($.identifier, $.access), $.call_arguments),
+    list: ($) =>
+      choice(
+        "[]",
+        seq("[", repeat_separated_by($.expression, ","), "]"),
+        seq(
+          "[",
+          repeat_separated_by($.expression, ","),
+          "..",
+          $.identifier,
+          "]"
+        )
+      ),
+
+    call: ($) => seq(choice($.identifier, $.field_access), $.call_arguments),
     call_arguments: ($) =>
       seq("(", optional(repeat_separated_by($.expression, ",")), ")"),
-    access: ($) => seq($.identifier, ".", choice($.identifier, $.access)),
-    pipeline: ($) => seq($.expression, "|>", $.expression),
+    field_access: ($) =>
+      seq($.identifier, ".", choice($.identifier, $.field_access)),
+    pipeline: ($) => prec.left(seq($.expression, "|>", $.expression)),
 
     // Constants
     constant: ($) =>
@@ -171,6 +334,10 @@ module.exports = grammar({
         // $.curvepoint - Add this later.
       ),
 
+    // Trace
+    trace: ($) => prec.left(seq("trace", $.expression)),
+    trace_if_false: ($) => seq($.expression, "?"),
+
     base10: (_$) => token(/[0-9]+/),
     base10_underscore: (_$) => token(/[0-9]+(_[0-9]+)+/),
     base16: (_$) => token(/0x[0-9a-fA-F]+/),
@@ -178,10 +345,14 @@ module.exports = grammar({
 
     string: ($) => seq("@", $.string_inner),
     bytes: ($) => seq(optional("#"), $.string_inner),
-    string_inner: ($) => seq('"', repeat(choice(/[^\\"]/, $.escape)), '"'),
+    bytearray_literal: ($) => seq("#", $.list),
+    string_inner: ($) =>
+      prec.right(seq('"', repeat(choice(/[^\\"]/, $.escape)), '"')),
     escape: (_$) => token(/\\./),
 
     //  Comments
+    any_comment: ($) =>
+      choice($.module_comment, $.definition_comment, $.comment),
     module_comment: (_$) => token(seq("////", /.*/)),
     definition_comment: (_$) => token(seq("///", /.*/)),
     comment: (_$) => token(seq("//", /.*/)),
