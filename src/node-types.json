@@ -46,11 +46,54 @@
       "required": true,
       "types": [
         {
+          "type": "backpass_assignment",
+          "named": true
+        },
+        {
           "type": "expect_assignment",
           "named": true
         },
         {
           "type": "let_assignment",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "backpass_assignment",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "discard",
+          "named": true
+        },
+        {
+          "type": "expression",
+          "named": true
+        },
+        {
+          "type": "identifier",
+          "named": true
+        },
+        {
+          "type": "list",
+          "named": true
+        },
+        {
+          "type": "match_pattern",
+          "named": true
+        },
+        {
+          "type": "pair",
+          "named": true
+        },
+        {
+          "type": "tuple",
           "named": true
         }
       ]
@@ -217,6 +260,10 @@
       "types": [
         {
           "type": "bool",
+          "named": true
+        },
+        {
+          "type": "bytearray_literal",
           "named": true
         },
         {
@@ -591,6 +638,10 @@
         {
           "type": "if",
           "named": true
+        },
+        {
+          "type": "soft_cast",
+          "named": true
         }
       ]
     }
@@ -822,6 +873,29 @@
       "types": [
         {
           "type": "expression",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "soft_cast",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "expression",
+          "named": true
+        },
+        {
+          "type": "identifier",
+          "named": true
+        },
+        {
+          "type": "type_definition",
           "named": true
         }
       ]
@@ -1384,6 +1458,10 @@
   },
   {
     "type": "<",
+    "named": false
+  },
+  {
+    "type": "<-",
     "named": false
   },
   {

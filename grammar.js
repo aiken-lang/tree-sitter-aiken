@@ -7,7 +7,7 @@ module.exports = grammar({
       repeat(
         choice($._definition, $.module_comment, $.definition_comment, $.comment)
       ),
-    extras: ($) => choice($.type_struct_inner),
+    extras: ($) => choice($.type_struct_inner, $.any_comment),
     _definition: ($) =>
       choice(
         $.import,
@@ -226,10 +226,20 @@ module.exports = grammar({
     if: ($) =>
       seq(
         "if",
-        $.expression,
+        choice($.expression, $.soft_cast),
         block(repeat($.expression)),
         optional(seq("else", choice($.if, block(repeat($.expression)))))
       ),
+    // Soft-Casting
+    // if identifier is type_definition { ... } else { ...}
+    soft_cast: ($) =>
+      seq(
+        "if",
+        $.identifier,
+        "is",
+        $.type_definition,
+        block(repeat($.expression)),
+        optional(seq("else", choice($.if, block(repeat($.expression)))))),
     when: ($) => seq("when", $.expression, "is", block(repeat1($.when_case))),
     when_case: ($) =>
       prec.right(
@@ -273,7 +283,25 @@ module.exports = grammar({
       ),
 
     unary_expect: ($) => prec.right(seq("expect", $.expression)),
-    assignment: ($) => choice($.let_assignment, $.expect_assignment),
+    assignment: ($) => choice($.let_assignment, $.expect_assignment, $.backpass_assignment),
+
+    backpass_assignment: ($) =>
+      prec.right(
+        seq(
+          choice("let", "expect"),
+          choice( // We should allow 'destructuring' here
+            $.match_pattern,
+            $.list,
+            $.tuple,
+            $.pair,
+            $.identifier,
+            $.discard
+          ),
+          "<-",
+          $.expression
+        )
+      ),
+
     let_assignment: ($) =>
       prec.right(
         seq(
@@ -382,12 +410,13 @@ module.exports = grammar({
         $.constant_value
       ),
     constant_value: (
-      $ //$.expression,
+      $
     ) =>
       choice(
         $.int,
         $.string,
         $.bytes,
+        $.bytearray_literal,
         $.bool,
         $.list,
         $.tuple,
