@@ -200,7 +200,8 @@ module.exports = grammar({
             $.error_term,
             prec(2, $.unary_op),
             $.unary_expect,
-            $.logical_op_chain
+            $.logical_op_chain,
+            $.todo
           ),
           optional(seq("as ", $.identifier))
         )
@@ -289,7 +290,8 @@ module.exports = grammar({
       prec.right(
         seq(
           choice("let", "expect"),
-          choice( // We should allow 'destructuring' here
+          choice(
+            repeat_separated_by(choice($.identifier, $.discard),","),
             $.match_pattern,
             $.list,
             $.tuple,
@@ -307,6 +309,7 @@ module.exports = grammar({
         seq(
           "let",
           choice(
+            repeat_separated_by(choice($.identifier, $.discard),","),
             $.match_pattern,
             $.list,
             $.tuple,
@@ -324,6 +327,7 @@ module.exports = grammar({
         seq(
           "expect",
           choice(
+            repeat_separated_by(choice($.identifier, $.discard),","),
             $.match_pattern,
             $.list,
             $.tuple,
