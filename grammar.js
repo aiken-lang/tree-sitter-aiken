@@ -240,7 +240,8 @@ module.exports = grammar({
         "is",
         $.type_definition,
         block(repeat($.expression)),
-        optional(seq("else", choice($.if, block(repeat($.expression)))))),
+        optional(seq("else", choice($.if, block(repeat($.expression)))))
+      ),
     when: ($) => seq("when", $.expression, "is", block(repeat1($.when_case))),
     when_case: ($) =>
       prec.right(
@@ -284,14 +285,15 @@ module.exports = grammar({
       ),
 
     unary_expect: ($) => prec.right(seq("expect", $.expression)),
-    assignment: ($) => choice($.let_assignment, $.expect_assignment, $.backpass_assignment),
+    assignment: ($) =>
+      choice($.let_assignment, $.expect_assignment, $.backpass_assignment),
 
     backpass_assignment: ($) =>
       prec.right(
         seq(
           choice("let", "expect"),
           choice(
-            repeat_separated_by(choice($.identifier, $.discard),","),
+            repeat_separated_by(choice($.identifier, $.discard), ","),
             $.match_pattern,
             $.list,
             $.tuple,
@@ -309,7 +311,7 @@ module.exports = grammar({
         seq(
           "let",
           choice(
-            repeat_separated_by(choice($.identifier, $.discard),","),
+            repeat_separated_by(choice($.identifier, $.discard), ","),
             $.match_pattern,
             $.list,
             $.tuple,
@@ -327,7 +329,7 @@ module.exports = grammar({
         seq(
           "expect",
           choice(
-            repeat_separated_by(choice($.identifier, $.discard),","),
+            repeat_separated_by(choice($.identifier, $.discard), ","),
             $.match_pattern,
             $.list,
             $.tuple,
@@ -413,9 +415,7 @@ module.exports = grammar({
         "=",
         $.constant_value
       ),
-    constant_value: (
-      $
-    ) =>
+    constant_value: ($) =>
       choice(
         $.int,
         $.string,
