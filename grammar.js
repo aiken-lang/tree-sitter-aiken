@@ -7,7 +7,7 @@ module.exports = grammar({
       repeat(
         choice($._definition, $.module_comment, $.definition_comment, $.comment)
       ),
-    extras: ($) => choice($.type_struct_inner),
+    extras: ($) => choice($.type_struct_inner, $.any_comment),
     _definition: ($) =>
       choice(
         $.import,
@@ -200,7 +200,8 @@ module.exports = grammar({
             $.error_term,
             prec(2, $.unary_op),
             $.unary_expect,
-            $.logical_op_chain
+            $.logical_op_chain,
+            $.todo
           ),
           optional(seq("as ", $.identifier))
         )
@@ -226,7 +227,18 @@ module.exports = grammar({
     if: ($) =>
       seq(
         "if",
-        $.expression,
+        choice($.expression, $.soft_cast),
+        block(repeat($.expression)),
+        optional(seq("else", choice($.if, block(repeat($.expression)))))
+      ),
+    // Soft-Casting
+    // if identifier is type_definition { ... } else { ...}
+    soft_cast: ($) =>
+      seq(
+        "if",
+        $.identifier,
+        "is",
+        $.type_definition,
         block(repeat($.expression)),
         optional(seq("else", choice($.if, block(repeat($.expression)))))
       ),
@@ -273,12 +285,33 @@ module.exports = grammar({
       ),
 
     unary_expect: ($) => prec.right(seq("expect", $.expression)),
-    assignment: ($) => choice($.let_assignment, $.expect_assignment),
+    assignment: ($) =>
+      choice($.let_assignment, $.expect_assignment, $.backpass_assignment),
+
+    backpass_assignment: ($) =>
+      prec.right(
+        seq(
+          choice("let", "expect"),
+          choice(
+            repeat_separated_by(choice($.identifier, $.discard), ","),
+            $.match_pattern,
+            $.list,
+            $.tuple,
+            $.pair,
+            $.identifier,
+            $.discard
+          ),
+          "<-",
+          $.expression
+        )
+      ),
+
     let_assignment: ($) =>
       prec.right(
         seq(
           "let",
           choice(
+            repeat_separated_by(choice($.identifier, $.discard), ","),
             $.match_pattern,
             $.list,
             $.tuple,
@@ -296,6 +329,7 @@ module.exports = grammar({
         seq(
           "expect",
           choice(
+            repeat_separated_by(choice($.identifier, $.discard), ","),
             $.match_pattern,
             $.list,
             $.tuple,
@@ -388,6 +422,7 @@ module.exports = grammar({
         $.int,
         $.string,
         $.bytes,
+        $.bytearray_literal,
         $.bool,
         $.list,
         $.tuple,
