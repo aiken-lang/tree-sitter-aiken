@@ -204,9 +204,8 @@ validator {
                                         (expression
                                           (field_access
                                             (identifier)
+                                            (field_identifier)
                                             (field_identifier))))
-                                      (ERROR
-                                        (UNEXPECTED 'i'))
                                       (call_argument
                                         (expression
                                           (field_access
@@ -603,15 +602,11 @@ validator(utxo_ref: OutputReference) {
                                       (function_argument
                                         (identifier)))
                                     (expression
-                                      (field_access
-                                        (identifier)
-                                        (field_identifier)))
-                                    (expression
                                       (bin_op
                                         (expression
                                           (field_access
-                                            (identifier
-                                              (MISSING _name))
+                                            (identifier)
+                                            (field_identifier)
                                             (field_identifier)))
                                         (binary_operator)
                                         (expression
@@ -688,20 +683,12 @@ validator(utxo_ref: OutputReference) {
                                       (function_argument
                                         (identifier)))
                                     (expression
-                                      (field_access
-                                        (identifier)
-                                        (field_identifier)))
-                                    (expression
-                                      (field_access
-                                        (identifier
-                                          (MISSING _name))
-                                        (field_identifier)))
-                                    (expression
                                       (bin_op
                                         (expression
                                           (field_access
-                                            (identifier
-                                              (MISSING _name))
+                                            (identifier)
+                                            (field_identifier)
+                                            (field_identifier)
                                             (field_identifier)))
                                         (binary_operator)
                                         (expression
@@ -1171,15 +1158,11 @@ validator(utxo_ref: OutputReference) {
                                 (function_argument
                                   (identifier)))
                               (expression
-                                (field_access
-                                  (identifier)
-                                  (field_identifier)))
-                              (expression
                                 (bin_op
                                   (expression
                                     (field_access
-                                      (identifier
-                                        (MISSING _name))
+                                      (identifier)
+                                      (field_identifier)
                                       (field_identifier)))
                                   (binary_operator)
                                   (expression

@@ -423,7 +423,7 @@ module.exports = grammar({
         seq($.identifier, ":", $.expression)
       ),
     field_access: ($) =>
-      seq($.identifier, ".", choice($.field_identifier, $.field_access)),
+      seq($.identifier, repeat1(seq(".", $.field_identifier))),
     pipeline: ($) => prec.left(seq($.expression, "|>", $.expression)),
 
     // Constants

@@ -484,10 +484,6 @@
       "required": true,
       "types": [
         {
-          "type": "field_access",
-          "named": true
-        },
-        {
           "type": "field_identifier",
           "named": true
         },

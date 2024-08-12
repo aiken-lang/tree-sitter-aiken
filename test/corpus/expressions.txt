@@ -1,0 +1,19 @@
+================================================================================
+Expressions - Field Access
+================================================================================
+
+fn test() {
+  first.second.third
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (function
+    (identifier)
+    (function_arguments)
+    (expression
+      (field_access
+        (identifier)
+        (field_identifier)
+        (field_identifier)))))
