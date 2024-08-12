@@ -1,4 +1,109 @@
 ================================================================================
+Old School Validator
+================================================================================
+
+validator {
+  fn vesting(datum: Datum, _redeemer: Void, ctx: ScriptContext) {
+    True
+  }
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (validator
+    (function
+      (identifier)
+      (function_arguments
+        (function_argument
+          (identifier)
+            (type_definition
+             (type_identifier)))
+        (function_argument
+          (identifier)
+            (type_definition
+             (type_identifier)))
+        (function_argument
+          (identifier)
+            (type_definition
+             (type_identifier))))
+      (expression
+        (bool)))))
+
+================================================================================
+V3 Validator
+================================================================================
+
+validator foo(wow) {
+  spend(datum: Datum, _redeemer: Void, oref: OutputReference, tx: Transaction) {
+    True
+  }
+
+  mint(_redeemer: Void, policy: PolicyId, tx: Transaction) {
+    True
+  }
+
+  else(_) {
+    fail
+  }
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (validator
+    (identifier)
+    (function_arguments
+      (function_argument
+        (identifier)))
+    (validator_hook
+      (identifier)
+      (function_arguments
+        (function_argument
+          (identifier)
+          (type_definition
+            (type_identifier)))
+        (function_argument
+          (identifier)
+          (type_definition
+            (type_identifier)))
+        (function_argument
+          (identifier)
+          (type_definition
+            (type_identifier)))
+        (function_argument
+          (identifier)
+          (type_definition
+            (type_identifier))))
+      (expression
+        (bool)))
+    (validator_hook
+      (identifier)
+      (function_arguments
+        (function_argument
+          (identifier)
+          (type_definition
+            (type_identifier)))
+        (function_argument
+          (identifier)
+          (type_definition
+            (type_identifier)))
+        (function_argument
+          (identifier)
+          (type_definition
+            (type_identifier))))
+      (expression
+        (bool)))
+    (validator_fallback
+      (function_arguments
+        (function_argument
+          (identifier)))
+      (expression
+        (error_term)))))
+
+
+
+================================================================================
 Vesting Validator
 ================================================================================
 

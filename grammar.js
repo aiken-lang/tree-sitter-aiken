@@ -111,10 +111,33 @@ module.exports = grammar({
     validator: ($) =>
       seq(
         "validator",
-        // optional($.identifier),
-        optional($.function_arguments),
-        optional(seq("->", $.type_definition)),
-        block(repeat($.function))
+        seq(optional($.identifier), optional($.function_arguments)),
+        block(
+          seq(
+            repeat(choice($.function, $.validator_hook)),
+            optional($.validator_fallback)
+          )
+        )
+      ),
+
+    validator_hook: ($) =>
+      seq(
+        $.identifier,
+        $.function_arguments,
+        optional(
+          seq("->", choice($.type_definition, $.expression, $.function_type))
+        ),
+        block(repeat($.expression))
+      ),
+
+    validator_fallback: ($) =>
+      seq(
+        "else",
+        $.function_arguments,
+        optional(
+          seq("->", choice($.type_definition, $.expression, $.function_type))
+        ),
+        block(repeat($.expression))
       ),
 
     // Tests are basically functions with the 'test' keyword
@@ -122,7 +145,7 @@ module.exports = grammar({
       seq(
         optional("pub"),
         "test",
-        optional($.identifier),
+        $.identifier,
         $.function_arguments,
         optional(seq("->", $.type_definition)),
         block(repeat($.expression))
@@ -135,9 +158,7 @@ module.exports = grammar({
         "fn",
         optional($.identifier),
         $.function_arguments,
-        optional(
-          seq("->", choice($.type_definition, $.expression, $.function_type))
-        ),
+        optional(seq("->", choice($.type_definition, $.function_type))),
         block(repeat($.expression))
       ),
 
