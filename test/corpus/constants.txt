@@ -147,3 +147,35 @@ const name = "deadbeef"
 (source_file
   (constant (identifier)
    (constant_value (bytes (string_inner)))))
+
+================================================================================
+Constant with qualified types
+================================================================================
+
+const administrator: multisig.MultisigScript =
+  multisig.AtLeast { required: config.required, scripts: config.scripts }
+
+--------------------------------------------------------------------------------
+
+(source_file
+      (constant
+        (identifier)
+        (type_definition
+          (identifier)
+          (type_identifier))
+        (constant_value
+          (match_pattern
+            (identifier)
+            (type_identifier)
+            (field_capture_element
+              (identifier)
+              (expression
+                (field_access
+                  (identifier)
+                  (field_identifier))))
+            (field_capture_element
+              (identifier)
+              (expression
+                (field_access
+                  (identifier)
+                  (field_identifier))))))))

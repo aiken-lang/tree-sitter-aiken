@@ -279,6 +279,10 @@
           "named": true
         },
         {
+          "type": "match_pattern",
+          "named": true
+        },
+        {
           "type": "pair",
           "named": true
         },
@@ -795,6 +799,10 @@
           "named": true
         },
         {
+          "type": "identifier",
+          "named": true
+        },
+        {
           "type": "match_pattern_argument",
           "named": true
         },
@@ -1109,6 +1117,10 @@
       "multiple": true,
       "required": true,
       "types": [
+        {
+          "type": "identifier",
+          "named": true
+        },
         {
           "type": "type_argument",
           "named": true
