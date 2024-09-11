@@ -93,6 +93,7 @@ module.exports = grammar({
       prec(
         2,
         seq(
+          optional(seq($.identifier, ".")),
           $.type_identifier,
           optional(seq("<", repeat_separated_by($.type_argument, ","), ">"))
         )
@@ -370,6 +371,7 @@ module.exports = grammar({
     match_pattern: ($) =>
       prec.right(
         seq(
+          optional(seq($.identifier, ".")),
           $.type_identifier,
           optional(
             choice(
@@ -447,7 +449,8 @@ module.exports = grammar({
         $.bool,
         $.list,
         $.tuple,
-        $.pair
+        $.pair,
+        $.match_pattern
         // $.curvepoint - Add this later.
       ),
 
