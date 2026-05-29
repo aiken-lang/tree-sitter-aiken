@@ -1,0 +1,671 @@
+================================================================================
+Fail with string expression
+================================================================================
+
+fn test_fail() {
+  fail @"some error message"
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (function
+    (identifier)
+    (function_arguments)
+    (expression
+      (error_term
+        (expression
+          (string
+            (string_inner)))))))
+
+================================================================================
+Fail with call expression
+================================================================================
+
+fn test_fail() {
+  fail some_function()
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (function
+    (identifier)
+    (function_arguments)
+    (expression
+      (error_term
+        (expression
+          (call
+            (identifier)
+            (call_arguments)))))))
+
+================================================================================
+Fail bare
+================================================================================
+
+fn test_fail() {
+  fail
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (function
+    (identifier)
+    (function_arguments)
+    (expression
+      (error_term))))
+
+================================================================================
+Todo with expression
+================================================================================
+
+fn test_todo() {
+  todo @"not implemented yet"
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (function
+    (identifier)
+    (function_arguments)
+    (expression
+      (todo
+        (expression
+          (string
+            (string_inner)))))))
+
+================================================================================
+Todo bare
+================================================================================
+
+fn test_todo() {
+  todo
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (function
+    (identifier)
+    (function_arguments)
+    (expression
+      (todo))))
+
+================================================================================
+When clause alternatives with pipe
+================================================================================
+
+fn test(x) {
+  when x is {
+    Bar1{..} | Bar2{..} -> True
+    _ -> False
+  }
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (function
+    (identifier)
+    (function_arguments
+      (function_argument
+        (identifier)))
+    (expression
+      (when
+        (expression
+          (identifier))
+        (when_case
+          (match_pattern_fields
+            (type_identifier))
+          (match_pattern_fields
+            (type_identifier))
+          (expression
+            (bool)))
+        (when_case
+          (discard)
+          (expression
+            (bool)))))))
+
+================================================================================
+Labeled trace
+================================================================================
+
+fn test() {
+  trace @"foo": @"bar"
+  True
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (function
+    (identifier)
+    (function_arguments)
+    (expression
+      (trace
+        (expression
+          (string
+            (string_inner)))
+        (expression
+          (string
+            (string_inner)))))
+    (expression
+      (bool))))
+
+================================================================================
+Soft-cast with pattern
+================================================================================
+
+fn test(x) {
+  if x is Some(y) {
+    y
+  } else {
+    0
+  }
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (function
+    (identifier)
+    (function_arguments
+      (function_argument
+        (identifier)))
+    (expression
+      (if
+        (soft_cast
+          (expression
+            (identifier))
+          (match_pattern
+            (type_identifier)
+            (match_pattern_argument
+              (expression
+                (identifier)))))
+        (expression
+          (identifier))
+        (expression
+          (int
+            (base10)))))))
+
+================================================================================
+Soft-cast with type annotation
+================================================================================
+
+fn test(x) {
+  if x is Some(y): Option<Int> {
+    y
+  } else {
+    0
+  }
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (function
+    (identifier)
+    (function_arguments
+      (function_argument
+        (identifier)))
+    (expression
+      (if
+        (soft_cast
+          (expression
+            (identifier))
+          (match_pattern
+            (type_identifier)
+            (match_pattern_argument
+              (expression
+                (identifier))))
+          (type_definition
+            (type_identifier)
+            (type_argument
+              type_argument: (type_definition
+                (type_identifier)))))
+        (expression
+          (identifier))
+        (expression
+          (int
+            (base10)))))))
+
+================================================================================
+Record update
+================================================================================
+
+fn update(user) {
+  User { ..user, name: @"New Name" }
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (function
+    (identifier)
+    (function_arguments
+      (function_argument
+        (identifier)))
+    (match_pattern_fields
+      (type_identifier)
+      (expression
+        (identifier))
+      (field_capture_element
+        (identifier)
+        (expression
+          (string
+            (string_inner)))))))
+
+================================================================================
+Record update with shorthand field
+================================================================================
+
+fn update(user, age) {
+  User { ..user, name: @"New Name", age }
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (function
+    (identifier)
+    (function_arguments
+      (function_argument
+        (identifier))
+      (function_argument
+        (identifier)))
+    (match_pattern_fields
+      (type_identifier)
+      (expression
+        (identifier))
+      (field_capture_element
+        (identifier)
+        (expression
+          (string
+            (string_inner))))
+      (field_capture_element
+        (identifier)))))
+
+================================================================================
+Test with fail modifier
+================================================================================
+
+test some_test() fail {
+  False
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (test
+    (identifier)
+    (function_arguments)
+    (expression
+      (bool))))
+
+================================================================================
+Test with fail once modifier
+================================================================================
+
+test some_test() fail once {
+  False
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (test
+    (identifier)
+    (function_arguments)
+    (expression
+      (bool))))
+
+================================================================================
+Test with via (property test)
+================================================================================
+
+test prop_test(x via fuzz.any_int) {
+  True
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (test
+    (identifier)
+    (function_arguments
+      (function_argument
+        (identifier)
+        (expression
+          (field_access
+            (identifier)
+            (field_identifier)))))
+    (expression
+      (bool))))
+
+================================================================================
+Benchmark
+================================================================================
+
+bench perf_test(x via fuzz.any_int) {
+  True
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (benchmark
+    (identifier)
+    (function_arguments
+      (function_argument
+        (identifier)
+        (expression
+          (field_access
+            (identifier)
+            (field_identifier)))))
+    (expression
+      (bool))))
+
+================================================================================
+Function type alias
+================================================================================
+
+type Callback = fn(Int) -> Bool
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (type_alias
+    (type_definition
+      (type_identifier))
+    (function_type
+      (function_arguments
+        (function_argument
+          (type_definition
+            (type_identifier))))
+      (type_definition
+        (type_identifier)))))
+
+================================================================================
+Validator with typed handlers
+================================================================================
+
+validator route_constraint(
+  base_order_hash: ByteArray,
+  pool_mint_policy: ByteArray,
+) {
+  withdraw(
+    redeemer: List<List<Int>>,
+    credential: Credential,
+    self: Transaction,
+  ) {
+    True
+  }
+
+  else(_) {
+    fail
+  }
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (validator
+    (identifier)
+    (function_arguments
+      (function_argument
+        (identifier)
+        (type_definition
+          (type_identifier)))
+      (function_argument
+        (identifier)
+        (type_definition
+          (type_identifier))))
+    (validator_hook
+      (identifier)
+      (function_arguments
+        (function_argument
+          (identifier)
+          (type_definition
+            (type_identifier)
+            (type_argument
+              type_argument: (type_definition
+                (type_identifier)
+                (type_argument
+                  type_argument: (type_definition
+                    (type_identifier)))))))
+        (function_argument
+          (identifier)
+          (type_definition
+            (type_identifier)))
+        (function_argument
+          (identifier)
+          (type_definition
+            (type_identifier))))
+      (expression
+        (bool)))
+    (validator_fallback
+      (function_arguments
+        (function_argument
+          (discard)))
+      (expression
+        (error_term)))))
+
+================================================================================
+Error with string expression
+================================================================================
+
+fn test_error() {
+  error @"something went wrong"
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (function
+    (identifier)
+    (function_arguments)
+    (expression
+      (error_term
+        (expression
+          (string
+            (string_inner)))))))
+
+================================================================================
+Variadic trace
+================================================================================
+
+fn test() {
+  trace @"values": a, b, c
+  True
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (function
+    (identifier)
+    (function_arguments)
+    (expression
+      (trace
+        (expression
+          (string
+            (string_inner)))
+        (expression
+          (identifier))
+        (expression
+          (identifier))
+        (expression
+          (identifier))))
+    (expression
+      (bool))))
+
+================================================================================
+Let with as binding
+================================================================================
+
+fn test(x) {
+  let Some(y) as opt = x
+  opt
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (function
+    (identifier)
+    (function_arguments
+      (function_argument
+        (identifier)))
+    (expression
+      (assignment
+        (let_assignment
+          (match_pattern
+            (type_identifier)
+            (match_pattern_argument
+              (expression
+                (identifier))))
+          (identifier)
+          (expression
+            (identifier)))))
+    (expression
+      (identifier))))
+
+================================================================================
+Expect with as binding
+================================================================================
+
+fn test(x) {
+  expect Some(y) as opt = x
+  opt
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (function
+    (identifier)
+    (function_arguments
+      (function_argument
+        (identifier)))
+    (expression
+      (assignment
+        (expect_assignment
+          (match_pattern
+            (type_identifier)
+            (match_pattern_argument
+              (expression
+                (identifier))))
+          (identifier)
+          (expression
+            (identifier)))))
+    (expression
+      (identifier))))
+
+================================================================================
+Backpass assignment
+================================================================================
+
+fn test() {
+  let result <- and_then(computation)
+  result
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (function
+    (identifier)
+    (function_arguments)
+    (expression
+      (assignment
+        (backpass_assignment
+          (identifier)
+          (expression
+            (call
+              (identifier)
+              (call_arguments
+                (call_argument
+                  (expression
+                    (identifier)))))))))
+    (expression
+      (identifier))))
+
+================================================================================
+If else chain
+================================================================================
+
+fn test(x) {
+  if x == 1 {
+    @"one"
+  } else if x == 2 {
+    @"two"
+  } else {
+    @"other"
+  }
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (function
+    (identifier)
+    (function_arguments
+      (function_argument
+        (identifier)))
+    (expression
+      (if
+        (expression
+          (bin_op
+            (expression
+              (identifier))
+            (binary_operator)
+            (expression
+              (int
+                (base10)))))
+        (expression
+          (string
+            (string_inner)))
+        (if
+          (expression
+            (bin_op
+              (expression
+                (identifier))
+              (binary_operator)
+              (expression
+                (int
+                  (base10)))))
+          (expression
+            (string
+              (string_inner)))
+          (expression
+            (string
+              (string_inner))))))))
+
+================================================================================
+Discard function arguments
+================================================================================
+
+fn test(_foo: Int, _bar: ByteArray) -> Bool {
+  True
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (function
+    (identifier)
+    (function_arguments
+      (function_argument
+        (discard)
+        (type_definition
+          (type_identifier)))
+      (function_argument
+        (discard)
+        (type_definition
+          (type_identifier))))
+    (type_definition
+      (type_identifier))
+    (expression
+      (bool))))

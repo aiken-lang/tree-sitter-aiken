@@ -1,11 +1,11 @@
 [package]
 name = "tree-sitter-aiken"
 description = "aiken grammar for the tree-sitter parsing library"
-version = "0.0.1"
+version = "0.1.0"
 keywords = ["incremental", "parsing", "aiken"]
 categories = ["parsing", "text-editors"]
-repository = "https://github.com/tree-sitter/tree-sitter-aiken"
-edition = "2018"
+repository = "https://github.com/aiken-lang/tree-sitter-aiken"
+edition = "2021"
 license = "MIT"
 
 build = "bindings/rust/build.rs"
@@ -15,7 +15,7 @@ include = ["bindings/rust/*", "grammar.js", "queries/*", "src/*"]
 path = "bindings/rust/lib.rs"
 
 [dependencies]
-tree-sitter = "~0.20.3"
+tree-sitter-language = "0.1"
 
 [build-dependencies]
 cc = "1.0"

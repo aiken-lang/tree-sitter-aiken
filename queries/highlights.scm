@@ -5,13 +5,18 @@
 (constant) @constant
 (validator) @function.special
 (test) @function.test
+(benchmark) @function.test
 (identifier) @variable
+(discard) @variable.builtin
 (type_identifier) @type
 (string) @string
 (int) @number
 (bytes) @string.special
 (any_comment) @comment
 (comment) @comment
+(decorator) @attribute
+(bool) @constant.builtin
+".." @punctuation.special
 "use" @keyword
 "pub" @keyword
 "opaque" @keyword
@@ -19,6 +24,8 @@
 "fn" @keyword
 "validator" @keyword
 "test" @keyword
+"bench" @keyword
+"const" @keyword
 "let" @keyword
 "expect" @keyword
 "when" @keyword
@@ -27,5 +34,11 @@
 "else" @keyword
 "trace" @keyword
 "fail" @keyword
+"error" @keyword
+"todo" @keyword
 "as" @keyword
-["!" "-" "+" "*" "/" "%" "==" "!=" "<" "<=" ">" ">=" "&&" "||" "|>" "->"] @operator
+"via" @keyword
+"and" @keyword
+"or" @keyword
+"once" @keyword
+["!" "-" "+" "*" "/" "%" "==" "!=" "<" "<=" ">" ">=" "&&" "||" "|>" "->" "|" "<-" "?"] @operator

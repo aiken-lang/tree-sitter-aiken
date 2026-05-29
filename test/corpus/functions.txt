@@ -94,6 +94,62 @@ fn sequence () {
                           (identifier))))))))))))
 
 ================================================================================
+Function argument record destructuring
+================================================================================
+
+fn get_name(Person { name, .. }: Person) -> ByteArray {
+  name
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (function
+    (identifier)
+    (function_arguments
+      (function_argument
+        (match_pattern_fields
+          (type_identifier)
+          (field_capture_element
+            (identifier)))
+        (type_definition
+          (type_identifier))))
+    (type_definition
+      (type_identifier))
+    (expression
+      (identifier))))
+
+================================================================================
+Function argument pattern destructuring
+================================================================================
+
+fn get_value(Some(x): Option<Int>) -> Int {
+  x
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (function
+    (identifier)
+    (function_arguments
+      (function_argument
+        (match_pattern
+          (type_identifier)
+          (match_pattern_argument
+            (expression
+              (identifier))))
+        (type_definition
+          (type_identifier)
+          (type_argument
+            type_argument: (type_definition
+              (type_identifier))))))
+    (type_definition
+      (type_identifier))
+    (expression
+      (identifier))))
+
+================================================================================
 Basic Function Test - Sequence with `..` list in pattern
 ================================================================================
 

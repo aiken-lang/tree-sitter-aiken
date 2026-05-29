@@ -1,0 +1,118 @@
+================================================================================
+Decorator on type
+================================================================================
+
+@list
+pub type Thing {
+  name: ByteArray,
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (decorator
+    (identifier))
+  (type_struct
+    (type_struct_inner
+      (type_definition
+        (type_identifier))
+      (type_struct_fields
+        (type_struct_field
+          (identifier)
+          (type_argument
+            type_argument: (type_definition
+              (type_identifier))))))))
+
+================================================================================
+Decorator with multiple arguments
+================================================================================
+
+@tag(1, 2)
+pub type Foo {
+  name: Int,
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (decorator
+    (identifier)
+    (decorator_argument
+      (int
+        (base10)))
+    (decorator_argument
+      (int
+        (base10))))
+  (type_struct
+    (type_struct_inner
+      (type_definition
+        (type_identifier))
+      (type_struct_fields
+        (type_struct_field
+          (identifier)
+          (type_argument
+            type_argument: (type_definition
+              (type_identifier))))))))
+
+================================================================================
+Decorator with empty parens
+================================================================================
+
+@tag()
+pub type Foo {
+  name: Int,
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (decorator
+    (identifier))
+  (type_struct
+    (type_struct_inner
+      (type_definition
+        (type_identifier))
+      (type_struct_fields
+        (type_struct_field
+          (identifier)
+          (type_argument
+            type_argument: (type_definition
+              (type_identifier))))))))
+
+================================================================================
+Decorator on enum variants
+================================================================================
+
+pub type L2Datum {
+  @tag(117)
+  Inactive
+  @tag(118)
+  BatchTxs(List<ByteArray>)
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (type_enum
+    (type_definition
+      (type_identifier))
+    (decorator
+      (identifier)
+      (decorator_argument
+        (int
+          (base10))))
+    (type_enum_variant
+      (type_identifier))
+    (decorator
+      (identifier)
+      (decorator_argument
+        (int
+          (base10))))
+    (type_enum_variant
+      (type_identifier)
+      (type_argument
+        type_argument: (type_definition
+          (type_identifier)
+          (type_argument
+            type_argument: (type_definition
+              (type_identifier))))))))

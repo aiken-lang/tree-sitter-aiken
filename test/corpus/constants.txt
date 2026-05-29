@@ -147,3 +147,75 @@ const name = "deadbeef"
 (source_file
   (constant (identifier)
    (constant_value (bytes (string_inner)))))
+
+================================================================================
+Constant Int base2
+================================================================================
+
+const name = 0b1010
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (constant (identifier)
+   (constant_value (int (base2)))))
+
+================================================================================
+Constant Int base8
+================================================================================
+
+const name = 0o17
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (constant (identifier)
+   (constant_value (int (base8)))))
+
+================================================================================
+Constant referencing another constant
+================================================================================
+
+const a = 42
+const b = a
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (constant (identifier)
+   (constant_value (int (base10))))
+  (constant (identifier)
+   (constant_value (identifier))))
+
+================================================================================
+Constant with constructor value
+================================================================================
+
+const x = Some(42)
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (constant (identifier)
+   (constant_value
+    (match_pattern
+      (type_identifier)
+      (match_pattern_argument
+        (expression (int (base10))))))))
+
+================================================================================
+Constant with record constructor value
+================================================================================
+
+const x = Foo { bar: 1 }
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (constant (identifier)
+   (constant_value
+    (match_pattern_fields
+      (type_identifier)
+      (field_capture_element
+        (identifier)
+        (expression (int (base10))))))))

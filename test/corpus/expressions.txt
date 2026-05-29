@@ -17,3 +17,25 @@ fn test() {
         (identifier)
         (field_identifier)
         (field_identifier)))))
+
+================================================================================
+Expressions - Chained field access on call
+================================================================================
+
+fn test() {
+  foo().bar.baz
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (function
+    (identifier)
+    (function_arguments)
+    (expression
+      (field_access
+        (call
+          (identifier)
+          (call_arguments))
+        (field_identifier)
+        (field_identifier)))))
